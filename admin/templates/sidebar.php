@@ -115,6 +115,7 @@
     <li><a href="/dollario-new/admin/modules/login_history.php"><span class="material-icons">history</span> Login History</a></li>
 
     <li class="section">Financial</li>
+    <li><a href="/dollario-new/admin/modules/rate_management.php"><span class="material-icons">currency_exchange</span> USDT Rate</a></li>
     <li><a href="/dollario-new/admin/modules/usdt_deposits.php"><span class="material-icons">account_balance_wallet</span> USDT Deposits</a></li>
     <li><a href="/dollario-new/admin/modules/inr_deposits_admin.php"><span class="material-icons">add_card</span> INR Deposits</a></li>
     <li><a href="/dollario-new/admin/modules/inr_withdrawals.php"><span class="material-icons">money_off</span> INR Withdrawals</a></li>

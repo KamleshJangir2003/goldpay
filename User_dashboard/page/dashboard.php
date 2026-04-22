@@ -30,7 +30,10 @@ try {
     $transactions = $txnStmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {}
 
-$currentPrice  = 89.80;
+// DB se USDT rate fetch karo
+$rateStmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_inr_rate'");
+$rateRow = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
+$currentPrice  = $rateRow ? floatval($rateRow['setting_value']) : 89.80;
 $totalUSDTinINR = $wallet['usdt_balance'] * $currentPrice;
 $totalBalance   = $wallet['inr_balance'] + $totalUSDTinINR;
 $priceChange24h = 0;

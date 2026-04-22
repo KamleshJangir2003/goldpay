@@ -50,10 +50,8 @@ $stmt->execute([$userId]);
 $wallet = $stmt->fetch(PDO::FETCH_ASSOC);
 $usdtBalance = floatval($wallet['usdt_balance'] ?? 0);
 
-// Fetch live rate (fallback 89.80)
-$rateStmt = $pdo->query("SELECT rate FROM crypto_rates ORDER BY updated_at DESC LIMIT 1");
-$rateRow = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
-$usdtRate = $rateRow ? floatval($rateRow['rate']) : 89.80;
+// Fetch rate from settings
+require '../../config/usdt_rate.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount = floatval($_POST['usdt_amount']);

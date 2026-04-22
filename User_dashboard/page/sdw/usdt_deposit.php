@@ -18,10 +18,8 @@ $stmt->execute([$userId]);
 $wallet = $stmt->fetch(PDO::FETCH_ASSOC);
 $usdtBalance = floatval($wallet['usdt_balance'] ?? 0);
 
-// Fetch USDT rate
-$rateStmt = $pdo->query("SELECT * FROM crypto_rates WHERE pair = 'USDT/INR' LIMIT 1");
-$rate = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
-$usdtRate = floatval($rate['rate'] ?? 89.80);
+// Fetch rate from settings
+require '../../config/usdt_rate.php';
 
 // Company USDT wallet addresses
 $wallets = [
@@ -29,6 +27,15 @@ $wallets = [
     'ERC20' => '0xYourERC20WalletAddressHere',
     'BEP20' => '0xYourBEP20WalletAddressHere',
 ];
+
+// Fetch QR images from settings
+$qrImages = [];
+foreach (['TRC20','ERC20','BEP20'] as $net) {
+    $k = 'usdt_qr_' . strtolower($net);
+    $r = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key=?");
+    $r->execute([$k]);
+    $qrImages[$net] = ($row = $r->fetch(PDO::FETCH_ASSOC)) ? $row['setting_value'] : null;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount   = floatval($_POST['amount']);
@@ -149,7 +156,9 @@ $deposits = $history->fetchAll(PDO::FETCH_ASSOC);
 
   <!-- Wallet Address Display -->
   <div class="wallet-box">
-    <div style="font-size:0.78rem;color:#64748b;">Send USDT to this address</div>
+    <div style="font-size:0.78rem;color:#64748b;margin-bottom:10px;">Send USDT to this address</div>
+    <img id="qrImg" src="<?= $qrImages['TRC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['TRC20']) : '' ?>" alt="QR Code"
+      style="width:160px;height:160px;object-fit:contain;border:1px solid #86efac;border-radius:10px;margin-bottom:10px;<?= $qrImages['TRC20'] ? '' : 'display:none;' ?>">
     <div class="addr" id="walletAddr"><?= $wallets['TRC20'] ?></div>
     <button class="copy-btn" onclick="copyAddr()">📋 Copy Address</button>
     <div style="font-size:0.75rem;color:#64748b;margin-top:8px;">⚠️ Only send USDT on selected network. Wrong network = lost funds.</div>
@@ -206,11 +215,24 @@ const wallets = {
   BEP20: '<?= $wallets['BEP20'] ?>'
 };
 
+const qrImages = {
+  TRC20: '<?= $qrImages['TRC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['TRC20']) : '' ?>',
+  ERC20: '<?= $qrImages['ERC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['ERC20']) : '' ?>',
+  BEP20: '<?= $qrImages['BEP20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['BEP20']) : '' ?>'
+};
+
 function switchNet(net, el) {
   document.querySelectorAll('.net-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('walletAddr').textContent = wallets[net];
   document.getElementById('chainInput').value = net;
+  const qrImg = document.getElementById('qrImg');
+  if (qrImages[net]) {
+    qrImg.src = qrImages[net];
+    qrImg.style.display = 'block';
+  } else {
+    qrImg.style.display = 'none';
+  }
 }
 
 function copyAddr() {

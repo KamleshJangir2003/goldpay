@@ -13,9 +13,8 @@ $wallet = $stmt->fetch(PDO::FETCH_ASSOC);
 $inrBalance  = floatval($wallet['inr_balance'] ?? 0);
 $usdtBalance = floatval($wallet['usdt_balance'] ?? 0);
 
-// Fetch rate
-$rateRow  = $pdo->query("SELECT rate FROM crypto_rates WHERE pair='USDT/INR' LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-$usdtRate = floatval($rateRow['rate'] ?? 89.80);
+// Fetch rate from settings
+require '../../config/usdt_rate.php';
 
 $message = $msgType = '';
 

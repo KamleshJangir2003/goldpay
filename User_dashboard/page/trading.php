@@ -5,10 +5,16 @@ require '../config/db.php';
 // Get current page from URL
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'chart';
 
-// Simulate fetching historical data
+// DB se USDT rate fetch karo
+try {
+    $rateStmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_inr_rate'");
+    $rateRow = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
+} catch (Exception $e) { $rateRow = null; }
+$basePrice = $rateRow ? floatval($rateRow['setting_value']) : 89.80;
+
 function getHistoricalData($days = 30) {
+    global $basePrice;
     $data = [];
-    $basePrice = 89.80;
     $timestamp = time() - ($days * 24 * 60 * 60);
     
     for ($i = 0; $i < ($days * 24); $i++) {
