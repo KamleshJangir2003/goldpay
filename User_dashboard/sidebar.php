@@ -9,7 +9,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    padding: 20px 0;
+    padding: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -19,8 +19,9 @@
 
   .sidebar .logo {
     text-align: center;
-    padding: 10px 0;
-    margin-bottom: 10px;
+    padding: 12px 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #1d2e49;
   }
 
   .sidebar .menu { list-style: none; padding: 0; margin: 0; flex: 1; }
@@ -84,7 +85,7 @@
 
 <div class="sidebar" id="sidebar">
   <div class="logo">
-    <img src="../image/Dollario-logo .svg" alt="Dollario" style="height: auto; width: 150px;">
+    <img src="../image/logo.png" alt="Dollario" style="height: auto; width: 140px; display: block; margin: 0 auto;">
   </div>
   <ul class="menu">
     <li class="section">Main</li>

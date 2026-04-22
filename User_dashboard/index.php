@@ -52,18 +52,21 @@ $pageTitle = "MBPAY - Crypto Exchange";
 
         /* Header Styles */
         header {
-            padding: 1rem 2rem;
+            padding: 0 2rem;
             backdrop-filter: blur(10px);
             position: fixed;
             width: 100%;
-            height: 100px;
+            height: 80px;
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
         }
 
         .nav-container {
             max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -71,15 +74,20 @@ $pageTitle = "MBPAY - Crypto Exchange";
         }
 
         .sidebar-header img {
-            width: 150px;
-            height: 210px;
-            margin-top: -70px;
+            width: 130px;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header img {
+                width: 100px;
+            }
         }
 
         .nav-links {
             display: flex;
             gap: 2rem;
-            margin-top: -65px;
+            align-items: center;
         }
 
         .rupeee img {
@@ -105,7 +113,7 @@ $pageTitle = "MBPAY - Crypto Exchange";
             border: none;
             color: white;
             font-size: 1.5rem;
-            margin-top: 30px;
+            cursor: pointer;
         }
 
         /* Hero Section */
@@ -526,7 +534,6 @@ $pageTitle = "MBPAY - Crypto Exchange";
 
             .mobile-menu-btn {
                 display: block;
-                margin-top: -68px;
             }
 
             .hero {
@@ -834,7 +841,7 @@ $pageTitle = "MBPAY - Crypto Exchange";
     <header>
         <nav class="nav-container">
             <div class="sidebar-header">
-                <img src="image/Dollario-logo .svg" alt="Logo">
+                <img src="image/logo.png" alt="Logo">
             </div>
             <div class="nav-links">
                 <a href="#"><i class="fas fa-exchange-alt"></i> Trade</a>
@@ -1167,7 +1174,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="footer-bottom">
             <div class="footer-logo">
-                <img src="image/Dollario-logo .svg" alt="DollarRio Logo">
+                <img src="image/logo.png" alt="DollarRio Logo">
             </div>
             <p class="copyright">© 2025 MBPAY. All Rights Reserved.</p>
         </div>

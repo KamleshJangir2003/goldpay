@@ -272,7 +272,7 @@ $priceChange24h = 0;
 
 <!-- Mobile Header -->
 <div class="mob-header">
-  <img src="../image/Dollario-logo .svg" alt="Dollario">
+  <img src="../image/logo.png" alt="Dollario">
   <button id="menuToggle">☰</button>
 </div>
 <script>

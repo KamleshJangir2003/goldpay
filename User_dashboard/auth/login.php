@@ -247,42 +247,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-decoration: underline;
         }
 
+        .mobile-logo {
+            display: none;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .mobile-logo img {
+            width: 140px;
+            height: auto;
+        }
+
         @media (max-width: 1024px) {
             body {
                 flex-direction: column;
             }
 
             .left-section {
-                width: 100%;
-                clip-path: none;
-                padding: 40px;
                 display: none;
             }
 
             .right-section {
                 width: 100%;
-                padding: 60px 40px;
+                padding: 50px 40px;
+                min-height: 100vh;
+                justify-content: center;
+            }
+
+            .mobile-logo {
+                display: block;
             }
         }
 
         @media (max-width: 768px) {
             .right-section {
-                padding: 50px 30px;
+                padding: 40px 24px;
             }
 
             .form-title {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .form-subtitle {
-                font-size: 14px;
-                margin-bottom: 30px;
+                font-size: 13px;
+                margin-bottom: 24px;
+            }
+
+            .btn {
+                padding: 14px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .right-section {
+                padding: 30px 18px;
             }
         }
 </style>
 <body>
     <div class="left-section">
-        <img src="../image/dollario-logo .svg" alt="HubPay Logo" class="logo">
+        <a href="../index.php"><img src="../image/logo.png" alt="Dollario Logo" class="logo"></a>
         <div class="left-content">
             <h1 class="left-title">Welcome Back to MBPAY</h1>
             <p class="left-subtitle">Log in and continue your crypto journey.</p>
@@ -290,6 +314,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <div class="right-section">
+        <div class="mobile-logo">
+            <a href="../index.php"><img src="../image/logo.png" alt="Dollario"></a>
+        </div>
         <h2 class="form-title">User Login</h2>
         <p class="form-subtitle">Access your account securely</p>
 
