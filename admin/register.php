@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Register</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -209,34 +210,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-decoration: none;
         }
 
+        .mobile-logo { display: none; text-align: center; margin-bottom: 28px; }
+        .mobile-logo img { width: 140px; height: auto; }
+
         @media (max-width: 1024px) {
-            body {
-                flex-direction: column;
-            }
-
-            .left-section {
-                width: 100%;
-                clip-path: none;
-                display: none;
-            }
-
-            .right-section {
-                width: 100%;
-                padding: 60px 40px;
-            }
+            body { flex-direction: column; }
+            .left-section { display: none; }
+            .right-section { width: 100%; padding: 50px 40px; min-height: 100vh; justify-content: center; }
+            .mobile-logo { display: block; }
         }
 
         @media (max-width: 768px) {
-            .right-section {
-                padding: 50px 30px;
-            }
+            .right-section { padding: 40px 24px; }
+            .form-title { font-size: 22px; }
+            .btn { padding: 14px; font-size: 15px; }
+        }
+
+        @media (max-width: 400px) {
+            .right-section { padding: 30px 18px; }
         }
     </style>
 </head>
 <body>
 
 <div class="left-section">
-    <img src="uploads/Dollario-logo .svg" alt="Admin Logo" class="logo">
+    <a href="login.php"><img src="uploads/dollario-logo.png" alt="Admin Logo" class="logo"></a>
     <div class="left-content">
         <h1 class="left-title">Create Admin Account</h1>
         <p class="left-subtitle">Register to access the admin panel securely.</p>
@@ -244,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="right-section">
+    <div class="mobile-logo"><a href="login.php"><img src="uploads/dollario-logo.png" alt="Dollario"></a></div>
     <h2 class="form-title">Admin Register</h2>
     <p class="form-subtitle">Fill the details below to create your account</p>
 

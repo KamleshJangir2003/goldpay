@@ -45,10 +45,11 @@
 
   .adm-sidebar .adm-logo {
     text-align: center;
-    padding: 20px 0 10px;
+    padding: 12px 0;
     border-bottom: 1px solid #1d2e49;
   }
-  .adm-sidebar .adm-logo img { width: 150px; }
+  .adm-sidebar .adm-logo img { width: 140px; height: auto; display: block; margin: 0 auto; }
+  .adm-topbar img { height: auto; width: 100px; }
 
   .adm-menu { list-style: none; padding: 0; margin: 0; flex: 1; }
 
@@ -96,14 +97,14 @@
 
 <!-- Mobile Topbar -->
 <div class="adm-topbar">
-  <img src="/dollario-new/admin/uploads/dollario-logo.png" alt="Dollario">
+  <img src="/dollario-new/User_dashboard/image/logo.png" alt="Dollario">
   <button class="adm-menu-btn" id="admMenuBtn">☰</button>
 </div>
 
 <!-- Sidebar -->
 <div class="adm-sidebar" id="admSidebar">
   <div class="adm-logo">
-    <img src="/dollario-new/admin/uploads/dollario-logo.png" alt="Dollario">
+    <img src="/dollario-new/User_dashboard/image/logo.png" alt="Dollario">
   </div>
   <ul class="adm-menu">
     <li class="section">Main</li>

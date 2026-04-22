@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <title>Admin Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -207,34 +208,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-decoration: none;
         }
 
+        .mobile-logo { display: none; text-align: center; margin-bottom: 28px; }
+        .mobile-logo img { width: 140px; height: auto; }
+
         @media (max-width: 1024px) {
-            body {
-                flex-direction: column;
-            }
-
-            .left-section {
-                width: 100%;
-                clip-path: none;
-                display: none;
-            }
-
-            .right-section {
-                width: 100%;
-                padding: 60px 40px;
-            }
+            body { flex-direction: column; }
+            .left-section { display: none; }
+            .right-section { width: 100%; padding: 50px 40px; min-height: 100vh; justify-content: center; }
+            .mobile-logo { display: block; }
         }
-
         @media (max-width: 768px) {
-            .right-section {
-                padding: 50px 30px;
-            }
+            .right-section { padding: 40px 24px; }
+            .form-title { font-size: 22px; }
+            .btn { padding: 14px; font-size: 15px; }
+        }
+        @media (max-width: 400px) {
+            .right-section { padding: 30px 18px; }
         }
     </style>
 </head>
 <body>
 
 <div class="left-section">
-    <img src="uploads/Dollario-logo .svg" alt="Admin Logo" class="logo">
+    <img src="uploads/dollario-logo.png" alt="Admin Logo" class="logo">
     <div class="left-content">
         <h1 class="left-title">Welcome Back Admin</h1>
         <p class="left-subtitle">Sign in to manage your dashboard securely.</p>
