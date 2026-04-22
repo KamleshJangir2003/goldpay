@@ -2,6 +2,7 @@
 session_name('user_session');
 session_start();
 require '../../config/db.php';
+require '../../includes/transaction_mailer.php';
 
 // Auto-create tables if missing
 try {
@@ -73,6 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, created_at) VALUES (?, 'deposit', ?, 'INR', ?, NOW())")
             ->execute([$userId, $amount, "INR Deposit via $method — UTR: $utr"]);
+
+        // Send email
+        $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+        $uRow->execute([$userId]);
+        $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+        if ($uData) {
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💰 INR Deposit Request Submitted - MBPAY', [
+                'Transaction Type' => 'INR Deposit',
+                'Amount'           => '₹' . number_format($amount, 2),
+                'Payment Method'   => $method,
+                'UTR / Reference'  => $utr,
+                'Status'           => 'Pending (Admin Approval)',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
+        }
 
         $message = "Deposit request of ₹" . number_format($amount, 2) . " submitted! Will be credited after admin approval (within 24 hours).";
         $msgType = "success";

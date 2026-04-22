@@ -2,6 +2,7 @@
 session_name('user_session');
 session_start();
 require '../../config/db.php';
+require '../../includes/transaction_mailer.php';
 
 $userId = $_SESSION['user_id'] ?? 0;
 if (!$userId) { header('Location: ../../auth/login.php'); exit; }
@@ -39,6 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Record transaction
         $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, status, created_at) VALUES (?, 'buy', ?, 'USDT', ?, 'completed', NOW())")
             ->execute([$userId, $usdtGet, "Bought " . number_format($usdtGet, 4) . " USDT @ ₹$usdtRate using ₹" . number_format($inrAmount, 2)]);
+
+        // Send email
+        $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+        $uRow->execute([$userId]);
+        $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+        if ($uData) {
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Buy USDT Successful - MBPAY', [
+                'Transaction Type' => 'Buy USDT',
+                'INR Spent'        => '₹' . number_format($inrAmount, 2),
+                'USDT Received'    => number_format($usdtGet, 4) . ' USDT',
+                'Rate'             => '1 USDT = ₹' . number_format($usdtRate, 2),
+                'Status'           => 'Completed',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
+        }
 
         $message = "Successfully bought " . number_format($usdtGet, 4) . " USDT for ₹" . number_format($inrAmount, 2) . "!";
         $msgType = "success";

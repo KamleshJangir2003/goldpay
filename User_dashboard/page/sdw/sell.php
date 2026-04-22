@@ -2,6 +2,7 @@
 session_name('user_session');
 session_start();
 require '../../config/db.php';
+require '../../includes/transaction_mailer.php';
 
 // Auto-create tables if missing
 try {
@@ -74,6 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Record transaction
         $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, status, created_at) VALUES (?, 'sell', ?, 'USDT', ?, 'completed', NOW())")
             ->execute([$userId, $amount, "Sold $amount USDT @ ₹$usdtRate = ₹" . number_format($inrCredit, 2)]);
+
+        // Send email
+        $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+        $uRow->execute([$userId]);
+        $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+        if ($uData) {
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Sell USDT Successful - MBPAY', [
+                'Transaction Type' => 'Sell USDT',
+                'USDT Sold'        => number_format($amount, 4) . ' USDT',
+                'INR Received'     => '₹' . number_format($inrCredit, 2),
+                'Rate'             => '1 USDT = ₹' . number_format($usdtRate, 2),
+                'Status'           => 'Completed',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
+        }
 
         $message = "Successfully sold $amount USDT for ₹" . number_format($inrCredit, 2) . "!";
         $msgType = "success";

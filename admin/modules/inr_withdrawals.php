@@ -1,6 +1,60 @@
 <?php
 include "../includes/db.php";
 
+// PHPMailer for sending emails
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/../../User_dashboard/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/../../User_dashboard/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/../../User_dashboard/PHPMailer/src/SMTP.php';
+
+function sendStatusEmail($email, $username, $subject, $details) {
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'Sharmagopesh706@gmail.com';
+        $mail->Password   = 'auxplhwwkzetzuma';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        $mail->setFrom('Sharmagopesh706@gmail.com', 'MBPAY');
+        $mail->addAddress($email, $username);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        
+        $rows = '';
+        foreach ($details as $label => $value) {
+            $rows .= "<tr>
+                <td style='padding:8px 12px;font-weight:600;color:#374151;background:#f8fafc;width:40%;'>{$label}</td>
+                <td style='padding:8px 12px;color:#1e293b;'>{$value}</td>
+            </tr>";
+        }
+        
+        $mail->Body = "
+        <div style='font-family:Poppins,sans-serif;max-width:520px;margin:auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;'>
+          <div style='background:linear-gradient(135deg,#6366f1,#4f46e5);padding:24px 28px;'>
+            <h2 style='color:#fff;margin:0;font-size:1.2rem;'>Payment Status Update</h2>
+            <p style='color:#c7d2fe;margin:4px 0 0;font-size:0.85rem;'>MBPAY</p>
+          </div>
+          <div style='padding:24px 28px;'>
+            <p style='color:#374151;margin-bottom:16px;'>Hi <strong>{$username}</strong>, your withdrawal status has been updated:</p>
+            <table style='width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;'>
+              {$rows}
+            </table>
+            <p style='color:#64748b;font-size:0.8rem;margin-top:20px;'>If you have any questions, please contact support.</p>
+          </div>
+          <div style='background:#f8fafc;padding:14px 28px;text-align:center;font-size:0.75rem;color:#94a3b8;'>
+            &copy; " . date('Y') . " MBPAY. All rights reserved.
+          </div>
+        </div>";
+        
+        $mail->send();
+    } catch (Exception $e) {
+        error_log("Status email failed: " . $mail->ErrorInfo);
+    }
+}
+
 // Handle approve/reject
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id'])) {
     $id     = intval($_POST['id']);
@@ -10,16 +64,36 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id']
         // Update status
         $conn->query("UPDATE inr_withdrawals SET status = 'Approved', approved_at = NOW() WHERE id = $id");
         // Update user_transactions status
-        $row = $conn->query("SELECT user_id, amount FROM inr_withdrawals WHERE id = $id")->fetch_assoc();
+        $row = $conn->query("SELECT w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id")->fetch_assoc();
         if ($row) {
             $conn->query("UPDATE user_transactions SET status = 'completed' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND amount = {$row['amount']} AND status = 'pending' LIMIT 1");
+            
+            // Send success email
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Successful - MBPAY', [
+                'Transaction Type' => 'INR Withdrawal',
+                'Amount'           => '₹' . number_format($row['amount'], 2),
+                'Method'           => $row['method'],
+                'Account Details'  => $row['account_details'],
+                'Status'           => '✅ Approved & Processed',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
         }
     } else {
         // Rejected — refund INR back to wallet
-        $row = $conn->query("SELECT user_id, amount FROM inr_withdrawals WHERE id = $id AND status = 'Pending'")->fetch_assoc();
+        $row = $conn->query("SELECT w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id AND w.status = 'Pending'")->fetch_assoc();
         if ($row) {
             $conn->query("UPDATE wallets SET inr_balance = inr_balance + {$row['amount']} WHERE user_id = {$row['user_id']}");
             $conn->query("UPDATE user_transactions SET status = 'rejected' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND amount = {$row['amount']} AND status = 'pending' LIMIT 1");
+            
+            // Send rejection email
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '❌ INR Withdrawal Rejected - MBPAY', [
+                'Transaction Type' => 'INR Withdrawal',
+                'Amount'           => '₹' . number_format($row['amount'], 2),
+                'Method'           => $row['method'],
+                'Account Details'  => $row['account_details'],
+                'Status'           => '❌ Rejected (Amount Refunded)',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
         }
         $conn->query("UPDATE inr_withdrawals SET status = 'Rejected' WHERE id = $id");
     }

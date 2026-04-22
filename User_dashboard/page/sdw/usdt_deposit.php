@@ -2,6 +2,7 @@
 session_name('user_session');
 session_start();
 require '../../config/db.php';
+require '../../includes/transaction_mailer.php';
 
 $userId = $_SESSION['user_id'] ?? 0;
 if (!$userId) {
@@ -64,6 +65,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, created_at) VALUES (?, 'deposit', ?, 'USDT', ?, NOW())")
                 ->execute([$userId, $amount, "USDT Deposit via $chain — TxHash: $txHash"]);
+
+            // Send email
+            $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+            $uRow->execute([$userId]);
+            $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+            if ($uData) {
+                sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💰 USDT Deposit Request Submitted - MBPAY', [
+                    'Transaction Type' => 'USDT Deposit',
+                    'Amount'           => number_format($amount, 4) . ' USDT',
+                    'Network'          => $chain,
+                    'TxHash'           => $txHash,
+                    'Status'           => 'Pending (Confirmation)',
+                    'Date & Time'      => date('d M Y, h:i A'),
+                ]);
+            }
 
             $message = "USDT deposit of $amount USDT submitted! Will be credited after confirmation.";
             $msgType = "success";

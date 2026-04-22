@@ -2,6 +2,7 @@
 session_name('user_session');
 session_start();
 require '../../config/db.php';
+require '../../includes/transaction_mailer.php';
 
 // Auto-create tables if missing
 try {
@@ -44,7 +45,15 @@ $bankAccounts = $bankStmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount  = floatval($_POST['amount']);
     $method  = htmlspecialchars($_POST['method']);
-    $details = htmlspecialchars(trim($_POST['account_details']));
+
+    if ($method === 'Bank Transfer') {
+        $accNo   = htmlspecialchars(trim($_POST['account_number'] ?? ''));
+        $ifsc    = htmlspecialchars(trim($_POST['ifsc_code'] ?? ''));
+        $holder  = htmlspecialchars(trim($_POST['account_holder'] ?? ''));
+        $details = "A/C: $accNo | IFSC: $ifsc | Name: $holder";
+    } else {
+        $details = htmlspecialchars(trim($_POST['upi_id'] ?? ''));
+    }
 
     if ($amount < 500) {
         $message = "Minimum withdrawal amount is ₹500.";
@@ -68,6 +77,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Record in user_transactions
         $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, status, created_at) VALUES (?, 'withdraw_inr', ?, 'INR', ?, 'pending', NOW())")
             ->execute([$userId, $amount, "INR Withdrawal via $method — $details"]);
+
+        // Send email
+        $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+        $uRow->execute([$userId]);
+        $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+        if ($uData) {
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💸 INR Withdrawal Request Submitted - MBPAY', [
+                'Transaction Type' => 'INR Withdrawal',
+                'Amount'           => '₹' . number_format($amount, 2),
+                'Method'           => $method,
+                'Account Details'  => $details,
+                'Status'           => 'Pending (Processing)',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
+        }
 
         $message = "Withdrawal request of ₹" . number_format($amount, 2) . " submitted! Will be processed within 24 hours.";
         $msgType = "success";
@@ -178,11 +202,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <option value="PhonePe">PhonePe</option>
       </select>
 
-      <div id="details_field">
-        <label id="details_label">UPI ID / Account Details</label>
-        <input type="text" name="account_details" id="account_details"
-               placeholder="Enter UPI ID or bank account number" required>
-        <p class="note">Double-check your details. Withdrawals cannot be reversed.</p>
+      <div id="upi_field" style="display:none;">
+        <label>UPI ID / Mobile Number</label>
+        <input type="text" name="upi_id" id="upi_id" placeholder="e.g. name@upi or 9876543210">
+        <p class="note">Double-check your UPI ID. Withdrawals cannot be reversed.</p>
+      </div>
+
+      <div id="bank_field" style="display:none;">
+        <label>Account Number</label>
+        <input type="text" name="account_number" id="account_number" placeholder="Enter account number">
+        
+        <label>IFSC Code</label>
+        <input type="text" name="ifsc_code" id="ifsc_code" placeholder="e.g. HDFC0001234">
+        
+        <label>Account Holder Name</label>
+        <input type="text" name="account_holder" id="account_holder" placeholder="Enter account holder name">
+        <p class="note">Double-check your bank details. Withdrawals cannot be reversed.</p>
       </div>
 
       <button type="submit" class="btn-withdraw">
@@ -195,17 +230,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <script>
     function toggleDetails(method) {
-      const label = document.getElementById('details_label');
-      const input = document.getElementById('account_details');
+      document.getElementById('upi_field').style.display = 'none';
+      document.getElementById('bank_field').style.display = 'none';
+      
+      document.getElementById('upi_id').removeAttribute('required');
+      document.getElementById('account_number').removeAttribute('required');
+      document.getElementById('ifsc_code').removeAttribute('required');
+      document.getElementById('account_holder').removeAttribute('required');
+      
       if (method === 'Bank Transfer') {
-        label.textContent = 'Account Number & IFSC';
-        input.placeholder = 'e.g. 50100123456789 | HDFC0001234';
+        document.getElementById('bank_field').style.display = 'block';
+        document.getElementById('account_number').setAttribute('required', 'required');
+        document.getElementById('ifsc_code').setAttribute('required', 'required');
+        document.getElementById('account_holder').setAttribute('required', 'required');
       } else if (method === 'UPI' || method === 'Paytm' || method === 'PhonePe') {
-        label.textContent = 'UPI ID / Mobile Number';
-        input.placeholder = 'e.g. name@upi or 9876543210';
-      } else {
-        label.textContent = 'Account Details';
-        input.placeholder = 'Enter your account details';
+        document.getElementById('upi_field').style.display = 'block';
+        document.getElementById('upi_id').setAttribute('required', 'required');
       }
     }
   </script>
