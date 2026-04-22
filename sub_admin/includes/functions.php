@@ -2,9 +2,9 @@
 // Database connection function
 function dbConnect() {
     $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "dollario_admin";  // Aapka database ka naam
+    $dbname   = 'u621774021_mbpay';
+    $username = 'u621774021_pay';
+    $password = 'Mbpay999';  // Aapka database ka naam
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
