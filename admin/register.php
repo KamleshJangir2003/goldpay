@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <div class="left-section">
-    <a href="login.php"><img src="uploads/dollario-logo.png" alt="Admin Logo" class="logo"></a>
+    <a href="login.php"><img src="uploads/logo.png" alt="Admin Logo" class="logo"></a>
     <div class="left-content">
         <h1 class="left-title">Create Admin Account</h1>
         <p class="left-subtitle">Register to access the admin panel securely.</p>

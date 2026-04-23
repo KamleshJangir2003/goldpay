@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <div class="left-section">
-    <img src="uploads/dollario-logo.png" alt="Admin Logo" class="logo">
+    <img src="uploads/logo.png" alt="Admin Logo" class="logo">
     <div class="left-content">
         <h1 class="left-title">Welcome Back Admin</h1>
         <p class="left-subtitle">Sign in to manage your dashboard securely.</p>
