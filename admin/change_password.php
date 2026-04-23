@@ -1,5 +1,5 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); session_start(); }
 require 'includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
