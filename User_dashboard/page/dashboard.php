@@ -40,7 +40,7 @@ function getDashSetting($pdo, $key, $default) {
 }
 $sellRate1  = floatval(getDashSetting($pdo, 'usdt_sell_rate_1', 89.80));
 $sellRate2  = floatval(getDashSetting($pdo, 'usdt_sell_rate_2', 90.00));
-$sellLabel1 = getDashSetting($pdo, 'usdt_sell_label_1', 'Standard Rate');
+$sellLabel1 = getDashSetting($pdo, 'usdt_sell_label_1', 'Mixed Fund');
 $sellLabel2 = getDashSetting($pdo, 'usdt_sell_label_2', 'Premium Rate');
 
 $currentPrice   = $sellRate1;

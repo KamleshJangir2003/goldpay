@@ -64,7 +64,7 @@ function getSellOption($pdo, $key, $default) {
 }
 $sellRate1  = floatval(getSellOption($pdo, 'usdt_sell_rate_1', $usdtRate));
 $sellRate2  = floatval(getSellOption($pdo, 'usdt_sell_rate_2', $usdtRate));
-$sellLabel1 = getSellOption($pdo, 'usdt_sell_label_1', 'Standard Rate');
+$sellLabel1 = getSellOption($pdo, 'usdt_sell_label_1', 'Mixed Fund');
 $sellLabel2 = getSellOption($pdo, 'usdt_sell_label_2', 'Premium Rate');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

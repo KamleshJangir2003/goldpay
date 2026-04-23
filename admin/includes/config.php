@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Asia/Kolkata');
+
 $host    = 'localhost';
 $dbname  = 'u621774021_mbpay';
 $username = 'u621774021_pay';
@@ -14,6 +16,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $username, $password, $options);
+    $pdo->exec("SET time_zone = '+05:30'");
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }

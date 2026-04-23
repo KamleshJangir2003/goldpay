@@ -57,7 +57,7 @@ function getSetting($conn, $key, $default = '') {
 }
 $sellRate1  = getSetting($conn, 'usdt_sell_rate_1', '89.80');
 $sellRate2  = getSetting($conn, 'usdt_sell_rate_2', '90.00');
-$sellLabel1 = getSetting($conn, 'usdt_sell_label_1', 'Standard Rate');
+$sellLabel1 = getSetting($conn, 'usdt_sell_label_1', 'Mixed Fund');
 $sellLabel2 = getSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 
 // Get current QRs
@@ -149,7 +149,7 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
       <div class="form-row">
         <div class="form-group">
           <label>Option 1 Label</label>
-          <input type="text" name="sell_label_1" value="<?= htmlspecialchars($sellLabel1) ?>" required placeholder="e.g., Standard Rate">
+          <input type="text" name="sell_label_1" value="<?= htmlspecialchars($sellLabel1) ?>" required placeholder="e.g., Mixed Fund">
         </div>
         <div class="form-group">
           <label>Option 2 Label</label>
