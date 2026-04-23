@@ -5,12 +5,14 @@ require '../config/db.php';
 // Get current page from URL
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'chart';
 
-// DB se USDT rate fetch karo
+// DB se USDT sell rates fetch karo
 try {
-    $rateStmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_inr_rate'");
-    $rateRow = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
-} catch (Exception $e) { $rateRow = null; }
-$basePrice = $rateRow ? floatval($rateRow['setting_value']) : 89.80;
+    $r1 = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_sell_rate_1'");
+    $r2 = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_sell_rate_2'");
+    $row1 = $r1 ? $r1->fetch(PDO::FETCH_ASSOC) : null;
+    $row2 = $r2 ? $r2->fetch(PDO::FETCH_ASSOC) : null;
+} catch (Exception $e) { $row1 = $row2 = null; }
+$basePrice = $row1 ? floatval($row1['setting_value']) : 89.80;
 
 function getHistoricalData($days = 30) {
     global $basePrice;

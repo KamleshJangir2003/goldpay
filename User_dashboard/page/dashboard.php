@@ -30,10 +30,20 @@ try {
     $transactions = $txnStmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {}
 
-// DB se USDT rate fetch karo
-$rateStmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key='usdt_inr_rate'");
-$rateRow = $rateStmt ? $rateStmt->fetch(PDO::FETCH_ASSOC) : null;
-$currentPrice  = $rateRow ? floatval($rateRow['setting_value']) : 89.80;
+// Sell price options fetch
+function getDashSetting($pdo, $key, $default) {
+    try {
+        $s = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_group='rates' AND setting_key=? LIMIT 1");
+        $s->execute([$key]); $r = $s->fetch(PDO::FETCH_ASSOC);
+        return $r ? $r['setting_value'] : $default;
+    } catch (Exception $e) { return $default; }
+}
+$sellRate1  = floatval(getDashSetting($pdo, 'usdt_sell_rate_1', 89.80));
+$sellRate2  = floatval(getDashSetting($pdo, 'usdt_sell_rate_2', 90.00));
+$sellLabel1 = getDashSetting($pdo, 'usdt_sell_label_1', 'Standard Rate');
+$sellLabel2 = getDashSetting($pdo, 'usdt_sell_label_2', 'Premium Rate');
+
+$currentPrice   = $sellRate1;
 $totalUSDTinINR = $wallet['usdt_balance'] * $currentPrice;
 $totalBalance   = $wallet['inr_balance'] + $totalUSDTinINR;
 $priceChange24h = 0;
@@ -341,6 +351,17 @@ $priceChange24h = 0;
           <div class="p-change <?php echo $priceChange24h >= 0 ? 'up' : 'down'; ?>">
             <?php echo ($priceChange24h >= 0 ? '+' : '') . number_format($priceChange24h, 2); ?>%
           </div>
+        </div>
+      </div>
+      <!-- Sell Price Options -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+        <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:0.72rem;color:#92400e;margin-bottom:3px;"><?= htmlspecialchars($sellLabel1) ?></div>
+          <div style="font-size:1rem;font-weight:700;color:#b45309;">₹<?= number_format($sellRate1, 2) ?></div>
+        </div>
+        <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:0.72rem;color:#166534;margin-bottom:3px;"><?= htmlspecialchars($sellLabel2) ?></div>
+          <div style="font-size:1rem;font-weight:700;color:#15803d;">₹<?= number_format($sellRate2, 2) ?></div>
         </div>
       </div>
     </div>
