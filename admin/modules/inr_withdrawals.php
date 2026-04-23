@@ -167,12 +167,18 @@ include '../templates/header.php';
     </thead>
     <tbody>
       <?php
+      $limit = 10;
+      $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+      $offset = ($page - 1) * $limit;
+      $totalPages = ceil($conn->query("SELECT COUNT(*) as c FROM inr_withdrawals")->fetch_assoc()['c'] / $limit);
+
       $sql = "SELECT w.*, u.username, u.email
               FROM inr_withdrawals w
               LEFT JOIN users u ON w.user_id = u.id
-              ORDER BY w.requested_at DESC";
+              ORDER BY w.requested_at DESC
+              LIMIT $limit OFFSET $offset";
       $result = $conn->query($sql);
-      $count = 1;
+      $count = $offset + 1;
       if ($result && $result->num_rows > 0):
         while ($row = $result->fetch_assoc()):
           $badgeClass = strtolower($row['status']) === 'pending' ? 'badge-pending' : (strtolower($row['status']) === 'approved' ? 'badge-approved' : 'badge-rejected');
@@ -210,6 +216,25 @@ include '../templates/header.php';
     </tbody>
   </table>
   </div>
+
+  <?php if ($totalPages > 1): ?>
+  <nav class="mt-3 d-flex justify-content-center">
+    <ul class="pagination pagination-sm">
+      <?php if ($page > 1): ?><li class="page-item"><a class="page-link" href="?page=<?= $page-1 ?>">&laquo;</a></li><?php endif; ?>
+      <?php
+        $start = max(1, $page - 2); $end = min($totalPages, $page + 2);
+        if ($start > 1) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        for ($i = $start; $i <= $end; $i++):
+      ?>
+        <li class="page-item <?= $i == $page ? 'active' : '' ?>"><a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a></li>
+      <?php endfor;
+        if ($end < $totalPages) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+      ?>
+      <?php if ($page < $totalPages): ?><li class="page-item"><a class="page-link" href="?page=<?= $page+1 ?>">&raquo;</a></li><?php endif; ?>
+    </ul>
+  </nav>
+  <?php endif; ?>
+
 </div>
 </body>
 </html>
