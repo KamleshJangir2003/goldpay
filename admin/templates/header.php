@@ -21,7 +21,7 @@ $_SESSION['notifications']  = $_SESSION['notifications'] ?? 5;
     padding: 0 20px;
     height: 58px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    margin-left: 252px;
+    margin-left: 250px;
     position: sticky;
     top: 0;
     z-index: 900;

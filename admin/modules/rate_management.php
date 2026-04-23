@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); session_start(); }
 require '../includes/db.php';
 include '../templates/sidebar.php';
+include '../templates/header.php';
 
 $msg = '';
 
@@ -78,7 +79,7 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
     body { background: #f4f6f9; min-height: 100vh; }
-    .content-area { margin-left: 260px; padding: 40px; }
+    .content-area { margin-left: 250px; padding: 24px; }
     .page-header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px 32px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
     .page-title { display: flex; align-items: center; gap: 12px; font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .page-title .material-icons { font-size: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }

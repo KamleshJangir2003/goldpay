@@ -5,8 +5,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 require_once '../includes/db.php';
 ?>
-<?php include '../templates/sidebar.php'; ?>
-<?php include '../templates/header.php'; ?>
 <?php
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
@@ -301,6 +299,9 @@ catch (Exception $e) { $activeInvestmentCount = 0; }
   </style>
 </head>
 <body>
+
+<?php include '../templates/sidebar.php'; ?>
+<?php include '../templates/header.php'; ?>
 
 <div class="adm-page">
 
