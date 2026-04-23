@@ -244,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="right-section">
     <div class="mobile-logo"><a href="login.php"><img src="uploads/dollario-logo.png" alt="Dollario"></a></div>
     <h2 class="form-title">Admin Register</h2>
-    <p class="form-subtitle">Fill the details below to create your account</p>
+    <p class="form-subtitle">Fill the details below to create your accounts</p>
 
     <?php if ($error): ?>
         <div class="message"><?= $error ?></div>
