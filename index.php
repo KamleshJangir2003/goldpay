@@ -65,7 +65,6 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             backdrop-filter: blur(10px);
             position: fixed;
             width: 100%;
-            height: 100px;
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -77,6 +76,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 100%;
         }
 
         .sidebar-header img {
@@ -521,7 +521,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             .nav-links {
                 display: none;
                 position: absolute;
-                top: 100px;
+                top: 70px;
                 left: 0;
                 right: 0;
                 background: var(--background);
@@ -536,7 +536,6 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 
             .mobile-menu-btn {
                 display: block;
-                margin-top: -68px;
             }
 
             .hero {
@@ -896,8 +895,10 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 document.addEventListener('DOMContentLoaded', function () {
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const mobileMenu = document.querySelector('.mobile-menu');
+    const header = document.querySelector('header');
 
     menuBtn.addEventListener('click', () => {
+        mobileMenu.style.top = header.offsetHeight + 'px';
         mobileMenu.classList.toggle('open');
     });
 });
@@ -906,12 +907,11 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Hide menu by default */
 .mobile-menu {
     display: none;
-    position: absolute;
-    top: 60px; /* adjust based on your header height */
+    position: fixed;
     left: 0;
     width: 100%;
-    background-color: #fff;
-    z-index: 999;
+    background-color: #0f172a;
+    z-index: 998;
 }
 
 /* Show menu when .open class is added */
