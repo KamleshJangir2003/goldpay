@@ -1,10 +1,6 @@
-<?php include '../templates/sidebar.php'; include '../templates/header.php';  ?>
+<?php include '../templates/sidebar.php'; include '../templates/header.php'; ?>
 <?php
-$host = 'localhost';
-$dbname   = 'u621774021_mbpay';
-$username = 'u621774021_pay';
-$password = 'Mbpay999';
-
+require_once '../includes/config.php';
 $conn = new mysqli($host, $username, $password, $dbname);
 if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
@@ -775,7 +771,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addCampaign'])) {
         move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
     }
 
-    $conn = new mysqli("localhost", "u621774021_dollario", "Copy@75970", "u621774021_dollario");
+    $conn = new mysqli($host, $username, $password, $dbname);
     $stmt = $conn->prepare("INSERT INTO campaigns (name, description, type, status, start_date, end_date, image, terms) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssss", $name, $description, $type, $status, $start_date, $end_date, $image_path, $terms);
     $stmt->execute();

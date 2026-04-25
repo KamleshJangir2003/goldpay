@@ -1,5 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); session_start(); }
+if (!defined('BASE_URL')) require_once __DIR__ . '/../includes/config.php';
 $_SESSION['user_name'] = $_SESSION['user_name'] ?? $_SESSION['username'] ?? 'Admin';
 
 // Load real unread count from DB
@@ -22,7 +23,7 @@ try {
   (function(){
     var l = document.createElement('link');
     l.rel = 'icon'; l.type = 'image/png';
-    l.href = '/dollario-new/admin/images/dollario-fav.png';
+    l.href = '<?= BASE_URL ?>/admin/images/dollario-fav.png';
     document.head.appendChild(l);
   })();
 </script>
@@ -209,7 +210,7 @@ try {
       <div class="adm-notif-drop" id="admNotifDrop">
         <div id="admNotifList"><div style="padding:14px;text-align:center;color:#999;font-size:13px;">Loading…</div></div>
         <div style="padding:8px 16px;border-top:1px solid #f1f1f1;text-align:right;">
-          <a href="/dollario-new/admin/modules/notifications.php" style="font-size:12px;color:#6366f1;text-decoration:none;">View All</a>
+          <a href="<?= BASE_URL ?>/admin/modules/notifications.php" style="font-size:12px;color:#6366f1;text-decoration:none;">View All</a>
           &nbsp;·&nbsp;
           <a href="#" id="admMarkRead" style="font-size:12px;color:#888;text-decoration:none;">Mark all read</a>
         </div>
@@ -220,9 +221,9 @@ try {
     <div class="adm-user-drop" id="admUserBtn">
       👤 <?= htmlspecialchars($_SESSION['user_name']) ?> ▼
       <div class="adm-drop-menu" id="admDropMenu">
-        <a href="/dollario-new/admin/profile.php"><i class="fas fa-user"></i> My Profile</a>
-        <a href="/dollario-new/admin/settings.php"><i class="fas fa-cog"></i> Settings</a>
-        <a href="/dollario-new/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="<?= BASE_URL ?>/admin/profile.php"><i class="fas fa-user"></i> My Profile</a>
+        <a href="<?= BASE_URL ?>/admin/settings.php"><i class="fas fa-cog"></i> Settings</a>
+        <a href="<?= BASE_URL ?>/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
     </div>
   </div>
@@ -246,17 +247,18 @@ try {
       });
     }
 
+    var _base = '<?= BASE_URL ?>';
     var notifPageUrls = {
-      inr_deposit:    '/dollario-new/admin/modules/inr_deposits_admin.php',
-      usdt_deposit:   '/dollario-new/admin/modules/usdt_deposits.php',
-      inr_withdrawal: '/dollario-new/admin/modules/inr_withdrawals.php',
-      buy_usdt:       '/dollario-new/admin/modules/buy_usdt_admin.php',
-      sell_usdt:      '/dollario-new/admin/modules/sell_usdt_admin.php',
-      general:        '/dollario-new/admin/modules/notifications.php'
+      inr_deposit:    _base + '/admin/modules/inr_deposits_admin.php',
+      usdt_deposit:   _base + '/admin/modules/usdt_deposits.php',
+      inr_withdrawal: _base + '/admin/modules/inr_withdrawals.php',
+      buy_usdt:       _base + '/admin/modules/buy_usdt_admin.php',
+      sell_usdt:      _base + '/admin/modules/sell_usdt_admin.php',
+      general:        _base + '/admin/modules/notifications.php'
     };
 
     function loadNotifications() {
-      fetch('/dollario-new/admin/api/notifications.php')
+      fetch(_base + '/admin/api/notifications.php')
         .then(function(r){ return r.json(); })
         .then(function(data){
           var list = document.getElementById('admNotifList');
@@ -282,7 +284,7 @@ try {
     }
 
     function refreshCount() {
-      fetch('/dollario-new/admin/api/notifications.php?action=count')
+      fetch(_base + '/admin/api/notifications.php?action=count')
         .then(function(r){ return r.json(); })
         .then(function(d){
           var badge = document.getElementById('admNotifCount');
@@ -337,7 +339,7 @@ try {
     if (markRead) {
       markRead.addEventListener('click', function(e){
         e.preventDefault(); e.stopPropagation();
-        fetch('/dollario-new/admin/api/notifications.php?action=mark_read')
+        fetch(_base + '/admin/api/notifications.php?action=mark_read')
           .then(function(){ refreshCount(); loadNotifications(); });
       });
     }
@@ -358,6 +360,7 @@ try {
 
 <script>
 (function(){
+  var _base   = '<?= BASE_URL ?>';
   var input   = document.getElementById('admSearchInput');
   var results = document.getElementById('admSearchResults');
   var timer;
@@ -369,7 +372,7 @@ try {
     results.innerHTML = '<div class="adm-sr-loading">Searching…</div>';
     results.classList.add('show');
     timer = setTimeout(function(){
-      fetch('/dollario-new/admin/api/search_transactions.php?q=' + encodeURIComponent(q))
+      fetch(_base + '/admin/api/search_transactions.php?q=' + encodeURIComponent(q))
         .then(function(r){ return r.json(); })
         .then(function(data){
           if (!data.length) {
@@ -378,7 +381,7 @@ try {
           }
           results.innerHTML = data.map(function(t){
             var sc = t.status.toLowerCase();
-            return '<a class="adm-sr-item" href="/dollario-new/admin/modules/transaction_reports.php?search=' + encodeURIComponent(t.txn_id) + '">'
+            return '<a class="adm-sr-item" href="' + _base + '/admin/modules/transaction_reports.php?search=' + encodeURIComponent(t.txn_id) + '">'
               + '<div class="adm-sr-left">'
               + '<span class="adm-sr-txnid">' + t.txn_id + ' &bull; ' + t.type + '</span>'
               + '<span class="adm-sr-user">' + t.username + ' &bull; ' + t.date + '</span>'

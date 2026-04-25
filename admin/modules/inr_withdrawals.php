@@ -9,16 +9,17 @@ require_once __DIR__ . '/../../User_dashboard/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../../User_dashboard/PHPMailer/src/SMTP.php';
 
 function sendStatusEmail($email, $username, $subject, $details) {
+    if (!defined('_ENV_LOADED')) require_once __DIR__ . '/../../env.php';
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = $_ENV['SMTP_HOST'];
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'Sharmagopesh706@gmail.com';
-        $mail->Password   = 'auxplhwwkzetzuma';
+        $mail->Username   = $_ENV['SMTP_USER'];
+        $mail->Password   = $_ENV['SMTP_PASS'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
-        $mail->setFrom('Sharmagopesh706@gmail.com', 'MBPAY');
+        $mail->setFrom($_ENV['SMTP_FROM'], $_ENV['SMTP_FROM_NAME']);
         $mail->addAddress($email, $username);
         $mail->isHTML(true);
         $mail->Subject = $subject;

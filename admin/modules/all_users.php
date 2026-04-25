@@ -3,23 +3,11 @@ if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); sess
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: ../login.php"); exit();
 }
+require_once '../includes/config.php';
+$conn = new mysqli($host, $username, $password, $dbname);
+if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
 include('../templates/sidebar.php');
 include('../templates/header.php');
-
-// DB connection
-//$host = "localhost";
-//$user = "root";
-//$password = "";
-//$dbname = "dollario_admin";//
-$host = 'localhost';
-$dbname   = 'u621774021_mbpay';
-$username = 'u621774021_pay';
-$password = 'Mbpay999';
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Apply filters
 $conditions = [];
@@ -347,16 +335,7 @@ $whereClause = count($conditions) > 0 ? 'WHERE ' . implode(' AND ', $conditions)
             </thead>
             <tbody>
                 <?php
-                // Database connection (update DB name if needed)
-                $mysqli = new mysqli("localhost", "root", "", "dollario_admin");
-
-                if ($mysqli->connect_error) {
-                    die("Connection failed: " . $mysqli->connect_error);
-                }
-
-                $filterWhere = $whereClause;
-                $sql = "SELECT id, username, email, mobile, status FROM users $filterWhere ORDER BY id DESC";
-                $result = $mysqli->query($sql);
+                $result = $conn->query("SELECT id, username, email, mobile, status FROM users $whereClause ORDER BY id DESC");
 
                 if ($result && $result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {

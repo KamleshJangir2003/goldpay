@@ -1,0 +1,20 @@
+# Environment secrets - NEVER commit this
+.env
+
+# Logs
+*.log
+
+# PHP executables
+php.exe
+
+# Uploads (user files)
+admin/uploads/*
+sub_admin/uploads/*
+User_dashboard/uploads/kyc_documents/*
+User_dashboard/uploads/help_media/*
+
+# Keep folder structure
+!admin/uploads/.gitkeep
+!sub_admin/uploads/.gitkeep
+!User_dashboard/uploads/kyc_documents/.gitkeep
+!User_dashboard/uploads/help_media/.gitkeep

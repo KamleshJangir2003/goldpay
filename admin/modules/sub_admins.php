@@ -1,10 +1,11 @@
 <?php
 // Handle status change BEFORE any output
 if (isset($_GET['change_status']) && isset($_GET['id'])) {
-    $pdo = new PDO("mysql:host=localhost;dbname=u621774021_mbpay", 'u621774021_pay', 'Mbpay999');
+    require_once __DIR__ . '/../includes/config.php';
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $newStatus = $_GET['change_status'] === 'active' ? 'inactive' : 'active';
 
     $updateStmt = $pdo->prepare("UPDATE users SET status = :status WHERE id = :id");
@@ -18,14 +19,9 @@ if (isset($_GET['change_status']) && isset($_GET['id'])) {
 <?php
 include '../templates/sidebar.php';
 include '../templates/header.php';
+require_once '../includes/config.php';
 
-// DB connection
-$host = 'localhost';
-$dbname = 'u973762102_adming';
-$username = 'u973762102_dollario12';
-$password = 'Dollari@98';
-
-$pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Fetch users

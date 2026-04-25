@@ -1,4 +1,7 @@
-<?php if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); session_start(); } ?>
+<?php
+if (session_status() === PHP_SESSION_NONE) { session_name('admin_session'); session_start(); }
+if (!defined('BASE_URL')) require_once __DIR__ . '/../includes/config.php';
+?>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
@@ -96,38 +99,38 @@
 <!-- Sidebar -->
 <div class="adm-sidebar" id="admSidebar">
   <div class="adm-logo">
-    <img src="/dollario-new/User_dashboard/image/logo.png" alt="Dollario">
+    <img src="<?= BASE_URL ?>/User_dashboard/image/logo.png" alt="Dollario">
   </div>
   <ul class="adm-menu">
     <li class="section">Main</li>
-    <li><a href="/dollario-new/admin/modules/dashboard.php"><span class="material-icons">dashboard</span> Dashboard</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/dashboard.php"><span class="material-icons">dashboard</span> Dashboard</a></li>
 
     <li class="section">User Management</li>
-    <li><a href="/dollario-new/admin/modules/all_users.php"><span class="material-icons">people</span> All Users</a></li>
-    <li><a href="/dollario-new/admin/modules/kyc_approvals.php"><span class="material-icons">verified_user</span> KYC Approvals</a></li>
-    <li><a href="/dollario-new/admin/modules/login_history.php"><span class="material-icons">history</span> Login History</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/all_users.php"><span class="material-icons">people</span> All Users</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/kyc_approvals.php"><span class="material-icons">verified_user</span> KYC Approvals</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/login_history.php"><span class="material-icons">history</span> Login History</a></li>
 
     <li class="section">Financial</li>
-    <li><a href="/dollario-new/admin/modules/rate_management.php"><span class="material-icons">currency_exchange</span> USDT Rate</a></li>
-    <li><a href="/dollario-new/admin/modules/usdt_deposits.php"><span class="material-icons">account_balance_wallet</span> USDT Deposits</a></li>
-    <li><a href="/dollario-new/admin/modules/inr_deposits_admin.php"><span class="material-icons">add_card</span> INR Deposits</a></li>
-    <li><a href="/dollario-new/admin/modules/inr_withdrawals.php"><span class="material-icons">money_off</span> INR Withdrawals</a></li>
-    <li><a href="/dollario-new/admin/modules/buy_usdt_admin.php"><span class="material-icons">shopping_cart</span> Buy USDT</a></li>
-    <li><a href="/dollario-new/admin/modules/sell_usdt_admin.php"><span class="material-icons">sell</span> Sell USDT</a></li>
-    <li><a href="/dollario-new/admin/modules/transaction_reports.php"><span class="material-icons">receipt_long</span> Transaction Reports</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/rate_management.php"><span class="material-icons">currency_exchange</span> USDT Rate</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/usdt_deposits.php"><span class="material-icons">account_balance_wallet</span> USDT Deposits</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/inr_deposits_admin.php"><span class="material-icons">add_card</span> INR Deposits</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/inr_withdrawals.php"><span class="material-icons">money_off</span> INR Withdrawals</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/buy_usdt_admin.php"><span class="material-icons">shopping_cart</span> Buy USDT</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/sell_usdt_admin.php"><span class="material-icons">sell</span> Sell USDT</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/transaction_reports.php"><span class="material-icons">receipt_long</span> Transaction Reports</a></li>
 
     <li class="section">Marketing</li>
-    <li><a href="/dollario-new/admin/modules/referral_system.php"><span class="material-icons">group_add</span> Referral System</a></li>
-    <!-- <li><a href="/dollario-new/admin/modules/campaigns.php"><span class="material-icons">campaign</span> Campaigns</a></li> -->
-    <li><a href="/dollario-new/admin/modules/notifications.php"><span class="material-icons">notifications</span> Notifications</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/referral_system.php"><span class="material-icons">group_add</span> Referral System</a></li>
+    <!-- <li><a href="<?= BASE_URL ?>/admin/modules/campaigns.php"><span class="material-icons">campaign</span> Campaigns</a></li> -->
+    <li><a href="<?= BASE_URL ?>/admin/modules/notifications.php"><span class="material-icons">notifications</span> Notifications</a></li>
 
     <li class="section">Administration</li>
-    <!-- <li><a href="/dollario-new/admin/modules/sub_admins.php"><span class="material-icons">admin_panel_settings</span> Sub-Admins</a></li> -->
-    <li><a href="/dollario-new/admin/modules/security.php"><span class="material-icons">security</span> Security</a></li>
-    <!-- <li><a href="/dollario-new/admin/modules/audit_logs.php"><span class="material-icons">receipt</span> Audit Logs</a></li> -->
-    <li><a href="/dollario-new/admin/modules/settings.php"><span class="material-icons">settings</span> Settings</a></li>
-    <li><a href="/dollario-new/admin/modules/admin_help_requests.php"><span class="material-icons">help</span> Help</a></li>
-    <li><a href="/dollario-new/admin/profile.php"><span class="material-icons">account_circle</span> My Profile</a></li>
+    <!-- <li><a href="<?= BASE_URL ?>/admin/modules/sub_admins.php"><span class="material-icons">admin_panel_settings</span> Sub-Admins</a></li> -->
+    <li><a href="<?= BASE_URL ?>/admin/modules/security.php"><span class="material-icons">security</span> Security</a></li>
+    <!-- <li><a href="<?= BASE_URL ?>/admin/modules/audit_logs.php"><span class="material-icons">receipt</span> Audit Logs</a></li> -->
+    <li><a href="<?= BASE_URL ?>/admin/modules/settings.php"><span class="material-icons">settings</span> Settings</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/modules/admin_help_requests.php"><span class="material-icons">help</span> Help</a></li>
+    <li><a href="<?= BASE_URL ?>/admin/profile.php"><span class="material-icons">account_circle</span> My Profile</a></li>
   </ul>
 </div>
 

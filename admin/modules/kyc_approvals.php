@@ -12,13 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['kyc
     $action = $_POST['action'];
 
     if ($action === 'approve') {
-        $conn->query("UPDATE user_kyc SET status='approved', rejection_reason=NULL WHERE id=$kycId");
-        $conn->query("UPDATE kyc_verifications SET status='approved' WHERE user_id=$userId");
+        $stmt = $conn->prepare("UPDATE user_kyc SET status='approved', rejection_reason=NULL WHERE id=?");
+        $stmt->bind_param('i', $kycId); $stmt->execute(); $stmt->close();
+        $stmt = $conn->prepare("UPDATE kyc_verifications SET status='approved' WHERE user_id=?");
+        $stmt->bind_param('i', $userId); $stmt->execute(); $stmt->close();
         $success = "KYC approved successfully.";
     } elseif ($action === 'reject') {
-        $reason = $conn->real_escape_string($_POST['reason'] ?? 'Documents not clear');
-        $conn->query("UPDATE user_kyc SET status='rejected', rejection_reason='$reason' WHERE id=$kycId");
-        $conn->query("UPDATE kyc_verifications SET status='rejected' WHERE user_id=$userId");
+        $reason = $_POST['reason'] ?? 'Documents not clear';
+        $stmt = $conn->prepare("UPDATE user_kyc SET status='rejected', rejection_reason=? WHERE id=?");
+        $stmt->bind_param('si', $reason, $kycId); $stmt->execute(); $stmt->close();
+        $stmt = $conn->prepare("UPDATE kyc_verifications SET status='rejected' WHERE user_id=?");
+        $stmt->bind_param('i', $userId); $stmt->execute(); $stmt->close();
         $success = "KYC rejected.";
     }
 }
@@ -92,7 +96,7 @@ include '../templates/header.php';
           $result = $conn->query("SELECT k.*, u.username, u.email FROM user_kyc k LEFT JOIN users u ON u.id = k.user_id ORDER BY k.updated_at DESC");
           $i = 1;
           while ($row = $result->fetch_assoc()):
-            $base = 'http://localhost/dollario-new/User_dashboard/';
+            $base = BASE_URL . '/User_dashboard/';
             // Fix any remaining double slashes in path
             $row['pan_card']       = preg_replace('#kyc_documents//+#', 'kyc_documents/' . $row['user_id'] . '/', $row['pan_card'] ?? '');
             $row['aadhaar_card']   = preg_replace('#kyc_documents//+#', 'kyc_documents/' . $row['user_id'] . '/', $row['aadhaar_card'] ?? '');

@@ -5,9 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit;
 }
 
-// Database connection
-$pdo = new PDO("mysql:host=localhost;dbname=u621774021_mbpay", 'u621774021_pay', 'Mbpay999');
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+require_once __DIR__ . '/../includes/config.php';
 
 // Fetch all unverified users
 $stmt = $pdo->query("SELECT id, name, email FROM users WHERE status = 'pending'");

@@ -1,16 +1,10 @@
 <?php
 include '../templates/sidebar.php';
 include '../templates/header.php';
+require_once '../includes/config.php';
 
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'u621774021_pay');
-define('DB_PASS', 'Mbpay999');
-define('DB_NAME', 'u621774021_mbpay');
-
-// Connect to database
 try {
-    $pdo = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());

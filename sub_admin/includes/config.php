@@ -1,8 +1,9 @@
 <?php
-$host    = 'localhost';
-$db      = 'u621774021_mbpay';
-$user    = 'u621774021_pay';
-$pass    = 'Mbpay999';
+require_once __DIR__ . '/../../env.php';
+$host    = $_ENV['DB_HOST'];
+$db      = $_ENV['DB_NAME'];
+$user    = $_ENV['DB_USER'];
+$pass    = $_ENV['DB_PASS'];
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
