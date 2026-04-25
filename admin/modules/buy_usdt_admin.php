@@ -41,7 +41,23 @@ $totalInr = $conn->query("SELECT SUM(CAST(REGEXP_REPLACE(SUBSTRING_INDEX(descrip
     html, body { overflow-x: hidden; }
     .wrap { margin-left: 260px; padding: 24px; max-width: calc(100vw - 260px); }
     @media (max-width: 767px) { .wrap { margin-left: 0; padding: 12px; max-width: 100%; } }
-    .stat-card { border-radius: 12px; padding: 20px; color: #fff; }
+    .stat-card { border-radius: 12px; padding: 20px; color: #fff; margin-bottom: 12px; }
+
+    /* Mobile card view for table */
+    @media (max-width: 767px) {
+      .stat-card { padding: 14px; }
+      .stat-card div:last-child { font-size: 1.4rem !important; }
+      table thead { display: none; }
+      table, table tbody, table tr, table td { display: block; width: 100%; }
+      table tr { background: #fff; border: 1px solid #dee2e6; border-radius: 10px; margin-bottom: 12px; padding: 10px 14px; }
+      table td { border: none; padding: 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+      table td::before { content: attr(data-label); font-weight: 600; color: #555; font-size: 12px; flex-shrink: 0; margin-right: 8px; }
+      table td:first-child { font-weight: 700; color: #6366f1; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; margin-bottom: 4px; }
+      .table-responsive { overflow-x: unset; }
+      .table-striped > tbody > tr:nth-of-type(odd) > * { background: transparent; }
+      .table-hover > tbody > tr:hover > * { background: transparent; }
+      .table-bordered { border: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -110,16 +126,16 @@ $totalInr = $conn->query("SELECT SUM(CAST(REGEXP_REPLACE(SUBSTRING_INDEX(descrip
             $badge = $row['status'] === 'completed' ? 'success' : ($row['status'] === 'pending' ? 'warning' : 'danger');
         ?>
         <tr>
-          <td><?= $i++ ?></td>
-          <td>
+          <td data-label="#"><?= $i++ ?></td>
+          <td data-label="User">
             <strong><?= htmlspecialchars($row['username'] ?? 'User #'.$row['user_id']) ?></strong><br>
             <small class="text-muted"><?= htmlspecialchars($row['email'] ?? '') ?></small>
           </td>
-          <td><strong><?= number_format($row['amount'], 4) ?> USDT</strong></td>
-          <td><strong><?= $inrSpent ?></strong></td>
-          <td><small><?= $rateInfo ?></small></td>
-          <td><span class="badge bg-<?= $badge ?>"><?= ucfirst($row['status']) ?></span></td>
-          <td><?= date('d M Y, h:i A', strtotime($row['created_at'])) ?></td>
+          <td data-label="USDT Bought"><strong><?= number_format($row['amount'], 4) ?> USDT</strong></td>
+          <td data-label="INR Spent"><strong><?= $inrSpent ?></strong></td>
+          <td data-label="Rate / Label"><small><?= $rateInfo ?></small></td>
+          <td data-label="Status"><span class="badge bg-<?= $badge ?>"><?= ucfirst($row['status']) ?></span></td>
+          <td data-label="Date"><?= date('d M Y, h:i A', strtotime($row['created_at'])) ?></td>
         </tr>
         <?php endwhile; else: ?>
         <tr><td colspan="7" class="text-center text-muted">No buy transactions found.</td></tr>
