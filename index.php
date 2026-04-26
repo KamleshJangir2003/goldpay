@@ -521,7 +521,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             .nav-links {
                 display: none;
                 position: absolute;
-                top: 70px;
+                top: 20px;
                 left: 0;
                 right: 0;
                 background: var(--background);
