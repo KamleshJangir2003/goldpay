@@ -128,15 +128,16 @@ try {
   }
   .adm-notif-drop {
     display: none;
-    position: absolute;
-    top: 36px; right: 0;
+    position: fixed;
+    top: 58px; right: 10px;
     background: #fff;
     box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     border-radius: 8px;
-    min-width: 240px;
-    max-height: 280px;
+    width: calc(100vw - 20px);
+    max-width: 340px;
+    max-height: 320px;
     overflow-y: auto;
-    z-index: 999;
+    z-index: 1200;
   }
   .adm-notif-drop p {
     margin: 0;
