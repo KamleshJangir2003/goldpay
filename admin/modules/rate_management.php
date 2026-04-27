@@ -27,6 +27,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sell_price_1'])) {
     }
 }
 
+// Handle wallet address update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wallet_network'])) {
+    $wnet = in_array($_POST['wallet_network'] ?? '', ['TRC20','ERC20','BEP20']) ? $_POST['wallet_network'] : '';
+    if ($wnet) {
+        $waddr = trim($_POST['wallet_address'] ?? '');
+        $wkey = 'usdt_wallet_' . strtolower($wnet);
+        $sw = $conn->prepare("INSERT INTO settings (setting_group, setting_key, setting_value) VALUES ('qr', ?, ?) ON DUPLICATE KEY UPDATE setting_value = ?");
+        $sw->bind_param("sss", $wkey, $waddr, $waddr);
+        $sw->execute(); $sw->close();
+        $msg = 'wallet_success';
+    }
+}
+
 // Handle QR upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qr_image']) && $_FILES['qr_image']['error'] === UPLOAD_ERR_OK) {
     $network = in_array($_POST['qr_network'] ?? '', ['TRC20','ERC20','BEP20']) ? $_POST['qr_network'] : '';
@@ -35,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qr_image']) && $_FIL
         if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
             $filename = 'qr_usdt_' . strtolower($network) . '.' . $ext;
             $dest = '../uploads/' . $filename;
-            // Remove old QR files for this network
             foreach (glob('../uploads/qr_usdt_' . strtolower($network) . '.*') as $old) { unlink($old); }
             move_uploaded_file($_FILES['qr_image']['tmp_name'], $dest);
             $key = 'usdt_qr_' . strtolower($network);
@@ -61,12 +73,15 @@ $sellRate2  = getSetting($conn, 'usdt_sell_rate_2', '90.00');
 $sellLabel1 = getSetting($conn, 'usdt_sell_label_1', 'Mixed Fund');
 $sellLabel2 = getSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 
-// Get current QRs
-$qrImages = [];
+// Get current QRs and wallet addresses
+$qrImages = []; $walletAddresses = [];
 foreach (['TRC20','ERC20','BEP20'] as $net) {
     $k = 'usdt_qr_' . strtolower($net);
     $r = $conn->query("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key='$k'");
     $qrImages[$net] = ($r && $qr = $r->fetch_assoc()) ? $qr['setting_value'] : null;
+    $wk = 'usdt_wallet_' . strtolower($net);
+    $wr = $conn->query("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key='$wk'");
+    $walletAddresses[$net] = ($wr && $wa = $wr->fetch_assoc()) ? $wa['setting_value'] : '';
 }
 ?>
 <!DOCTYPE html>
@@ -224,6 +239,13 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
       transition: border-color 0.2s;
     }
     .qr-upload-row input[type="file"]:hover { border-color: #1a73e8; }
+    .wallet-addr-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .wallet-input {
+      flex: 1; padding: 7px 10px; border: 1.5px solid #cbd5e0;
+      border-radius: 7px; font-size: 12px; font-family: monospace;
+      background: #fff; outline: none; transition: border-color 0.2s;
+    }
+    .wallet-input:focus { border-color: #1a73e8; }
 
     @media (max-width: 900px) { .adm-cards-grid { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
@@ -249,6 +271,8 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
     <div class="adm-alert adm-alert-success"><i class="fas fa-check-circle"></i> QR code updated successfully.</div>
   <?php elseif ($msg === 'qr_error'): ?>
     <div class="adm-alert adm-alert-error"><i class="fas fa-exclamation-circle"></i> Invalid file. Only JPG, PNG, GIF, WEBP allowed.</div>
+  <?php elseif ($msg === 'wallet_success'): ?>
+    <div class="adm-alert adm-alert-success"><i class="fas fa-check-circle"></i> Wallet address updated successfully.</div>
   <?php endif; ?>
 
   <div class="adm-cards-grid">
@@ -340,8 +364,15 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
           <form method="POST" enctype="multipart/form-data" class="qr-upload-row">
             <input type="hidden" name="qr_network" value="<?= $net ?>">
             <input type="file" name="qr_image" accept="image/*" required>
-            <button type="submit" class="adm-btn primary">
+            <button type="submit" class="adm-btn primary sm">
               <i class="fas fa-upload"></i> Upload
+            </button>
+          </form>
+          <form method="POST" class="wallet-addr-row">
+            <input type="hidden" name="wallet_network" value="<?= $net ?>">
+            <input type="text" name="wallet_address" value="<?= htmlspecialchars($walletAddresses[$net]) ?>" placeholder="Enter <?= $net ?> wallet address" class="wallet-input">
+            <button type="submit" class="adm-btn primary sm">
+              <i class="fas fa-save"></i> Save
             </button>
           </form>
         </div>

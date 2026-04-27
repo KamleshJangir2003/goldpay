@@ -23,20 +23,16 @@ $usdtBalance = floatval($wallet['usdt_balance'] ?? 0);
 // Fetch rate from settings
 require '../../config/usdt_rate.php';
 
-// Company USDT wallet addresses
-$wallets = [
-    'TRC20' => 'TYourTRC20WalletAddressHere',
-    'ERC20' => '0xYourERC20WalletAddressHere',
-    'BEP20' => '0xYourBEP20WalletAddressHere',
-];
-
-// Fetch QR images from settings
-$qrImages = [];
+// Fetch wallet addresses and QR images from settings
+$wallets = []; $qrImages = [];
 foreach (['TRC20','ERC20','BEP20'] as $net) {
-    $k = 'usdt_qr_' . strtolower($net);
     $r = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key=?");
-    $r->execute([$k]);
-    $qrImages[$net] = ($row = $r->fetch(PDO::FETCH_ASSOC)) ? $row['setting_value'] : null;
+    $r->execute(['usdt_wallet_' . strtolower($net)]);
+    $wallets[$net] = ($row = $r->fetch(PDO::FETCH_ASSOC)) ? $row['setting_value'] : '';
+
+    $r2 = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key=?");
+    $r2->execute(['usdt_qr_' . strtolower($net)]);
+    $qrImages[$net] = ($row2 = $r2->fetch(PDO::FETCH_ASSOC)) ? $row2['setting_value'] : null;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
