@@ -148,7 +148,8 @@ $transactions = $stmt->fetchAll();
             'withdraw'     => '🔼 Withdraw USDT',
           ];
           $typeLabel = $typeLabels[$row['type']] ?? ucfirst($row['type']);
-          $statusColor = $row['status'] === 'completed' ? '#16a34a' : ($row['status'] === 'rejected' ? '#dc2626' : '#d97706');
+          $statusColor = $row['status'] === 'completed' ? '#16a34a' : ($row['status'] === 'approved' ? '#2563eb' : ($row['status'] === 'rejected' ? '#dc2626' : '#d97706'));
+          $statusLabel = $row['status'] === 'approved' ? 'Processing' : ucfirst($row['status'] ?? 'pending');
           $amtPrefix = in_array($row['type'], ['deposit', 'sell']) ? '+' : '-';
           $amtColor  = in_array($row['type'], ['deposit', 'sell']) ? '#16a34a' : '#dc2626';
         ?>
@@ -159,8 +160,15 @@ $transactions = $stmt->fetchAll();
               <?= $amtPrefix ?><?= $row['currency'] === 'INR' ? '₹' : '' ?><?= number_format($row['amount'], 2) ?><?= $row['currency'] === 'USDT' ? ' USDT' : '' ?>
             </td>
             <td data-label="Currency"><?= htmlspecialchars($row['currency']) ?></td>
-            <td data-label="Description" style="font-size:13px; color:#64748b;"><?= htmlspecialchars($row['description'] ?? '') ?></td>
-            <td data-label="Status"><span style="background:<?= $statusColor ?>20; color:<?= $statusColor ?>; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600;"><?= ucfirst($row['status'] ?? 'pending') ?></span></td>
+            <td data-label="Description" style="font-size:13px; color:#64748b;">
+              <?= htmlspecialchars($row['description'] ?? '') ?>
+              <?php if (!empty($row['admin_note'])): ?>
+                <br><span style="display:inline-block;margin-top:4px;background:#eff6ff;border-left:3px solid #3b82f6;padding:4px 8px;border-radius:4px;color:#1d4ed8;font-size:12px;">
+                  💬 <?= nl2br(htmlspecialchars($row['admin_note'])) ?>
+                </span>
+              <?php endif; ?>
+            </td>
+            <td data-label="Status"><span style="background:<?= $statusColor ?>20; color:<?= $statusColor ?>; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600;"><?= $statusLabel ?></span></td>
             <td data-label="Date"><?= date('d M Y, h:i A', strtotime($row['created_at'])) ?></td>
           </tr>
         <?php endforeach; ?>

@@ -56,26 +56,49 @@ function sendStatusEmail($email, $username, $subject, $details) {
     }
 }
 
-// Handle approve/reject
+// Handle approve/reject/complete
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id'])) {
     $id     = intval($_POST['id']);
-    $action = $_POST['action'] === "approve" ? "Approved" : "Rejected";
+    $action = $_POST['action'];
 
-    if ($action === "Approved") {
+    if ($action === "approve") {
         $conn->query("UPDATE inr_withdrawals SET status = 'Approved', approved_at = NOW() WHERE id = $id");
-        $row = $conn->query("SELECT w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id")->fetch_assoc();
+        $row = $conn->query("SELECT w.id, w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id")->fetch_assoc();
         if ($row) {
-            $conn->query("UPDATE user_transactions SET status = 'completed' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND amount = {$row['amount']} AND status = 'pending' LIMIT 1");
-            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Successful - MBPAY', [
+            // Match by user_id + type + CAST amount to avoid decimal precision mismatch
+            $conn->query("UPDATE user_transactions SET status = 'approved' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND CAST(amount AS DECIMAL(10,2)) = CAST({$row['amount']} AS DECIMAL(10,2)) AND status = 'pending' ORDER BY created_at DESC LIMIT 1");
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Approved - MBPAY', [
                 'Transaction Type' => 'INR Withdrawal',
                 'Amount'           => '₹' . number_format($row['amount'], 2),
                 'Method'           => $row['method'],
                 'Account Details'  => $row['account_details'],
-                'Status'           => '✅ Approved & Processed',
+                'Status'           => '✅ Approved',
+                'Date & Time'      => date('d M Y, h:i A'),
+            ]);
+        }
+    } elseif ($action === "complete") {
+        $payment_notes = $conn->real_escape_string(trim($_POST['payment_notes'] ?? ''));
+        $row = $conn->query("SELECT w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id AND w.status = 'Approved'")->fetch_assoc();
+        if ($row) {
+            $conn->query("UPDATE inr_withdrawals SET status = 'Completed', completed_at = NOW(), payment_notes = '$payment_notes' WHERE id = $id");
+            // Update user_transactions with admin note and mark completed
+            $note_escaped = $conn->real_escape_string($payment_notes);
+            $conn->query("UPDATE user_transactions SET status = 'completed', admin_note = '$note_escaped' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND CAST(amount AS DECIMAL(10,2)) = CAST({$row['amount']} AS DECIMAL(10,2)) ORDER BY created_at DESC LIMIT 1");
+            // User notification
+            $notif_msg = "Your INR withdrawal of ₹" . number_format($row['amount'], 2) . " has been completed." . ($payment_notes ? " Note: $payment_notes" : "");
+            $conn->query("INSERT INTO user_notifications (user_id, title, message, type) VALUES ({$row['user_id']}, 'Withdrawal Completed ✅', '" . $conn->real_escape_string($notif_msg) . "', 'transaction')");
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Completed - MBPAY', [
+                'Transaction Type' => 'INR Withdrawal',
+                'Amount'           => '₹' . number_format($row['amount'], 2),
+                'Method'           => $row['method'],
+                'Account Details'  => $row['account_details'],
+                'Status'           => '✅ Payment Completed',
+                'Admin Note'       => $payment_notes ?: '—',
                 'Date & Time'      => date('d M Y, h:i A'),
             ]);
         }
     } else {
+        // reject
         $row = $conn->query("SELECT w.user_id, w.amount, w.method, w.account_details, u.email, u.username FROM inr_withdrawals w LEFT JOIN users u ON w.user_id = u.id WHERE w.id = $id AND w.status = 'Pending'")->fetch_assoc();
         if ($row) {
             $conn->query("UPDATE wallets SET inr_balance = inr_balance + {$row['amount']} WHERE user_id = {$row['user_id']}");
@@ -113,9 +136,10 @@ include '../templates/header.php';
     html, body { overflow-x: hidden; }
     .container { margin-left: 260px; max-width: calc(100vw - 260px); }
     @media (max-width: 767px) { .container { margin-left: 0; max-width: 100%; padding: 12px; } }
-    .badge-pending  { background: #fff3cd; color: #856404; }
-    .badge-approved { background: #d1e7dd; color: #0f5132; }
-    .badge-rejected { background: #f8d7da; color: #842029; }
+    .badge-pending   { background: #fff3cd; color: #856404; }
+    .badge-approved  { background: #d1e7dd; color: #0f5132; }
+    .badge-rejected  { background: #f8d7da; color: #842029; }
+    .badge-completed { background: #cfe2ff; color: #084298; }
   </style>
 </head>
 <body>
@@ -173,11 +197,14 @@ include '../templates/header.php';
               LEFT JOIN users u ON w.user_id = u.id
               ORDER BY w.requested_at DESC
               LIMIT $limit OFFSET $offset";
+      // Count completed too
+      $completed = $conn->query("SELECT COUNT(*) as c FROM inr_withdrawals WHERE status='Completed'")->fetch_assoc()['c'];
       $result = $conn->query($sql);
       $count = $offset + 1;
       if ($result && $result->num_rows > 0):
         while ($row = $result->fetch_assoc()):
-          $badgeClass = strtolower($row['status']) === 'pending' ? 'badge-pending' : (strtolower($row['status']) === 'approved' ? 'badge-approved' : 'badge-rejected');
+          $s = strtolower($row['status']);
+          $badgeClass = $s === 'pending' ? 'badge-pending' : ($s === 'approved' ? 'badge-approved' : ($s === 'completed' ? 'badge-completed' : 'badge-rejected'));
       ?>
       <tr>
         <td><?= $count++ ?></td>
@@ -201,6 +228,13 @@ include '../templates/header.php';
               <input type="hidden" name="id" value="<?= $row['id'] ?>">
               <button name="action" value="reject" class="btn btn-danger btn-sm">❌ Reject</button>
             </form>
+          <?php elseif ($row['status'] === 'Approved'): ?>
+            <button class="btn btn-primary btn-sm" onclick="openCompleteModal(<?= $row['id'] ?>, '<?= htmlspecialchars(addslashes($row['username'] ?? 'User')) ?>', '<?= number_format($row['amount'], 2) ?>')">✔ Complete</button>
+          <?php elseif ($row['status'] === 'Completed'): ?>
+            <span class="text-success fw-bold">✔ Done</span>
+            <?php if ($row['payment_notes']): ?>
+              <br><small class="text-muted" title="<?= htmlspecialchars($row['payment_notes']) ?>">📝 <?= htmlspecialchars(mb_strimwidth($row['payment_notes'], 0, 30, '...')) ?></small>
+            <?php endif; ?>
           <?php else: ?>
             <span class="text-muted">—</span>
           <?php endif; ?>
@@ -232,5 +266,42 @@ include '../templates/header.php';
   <?php endif; ?>
 
 </div>
+
+<!-- Complete Payment Modal -->
+<div class="modal fade" id="completeModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">✔ Complete Payment</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST">
+        <input type="hidden" name="id" id="modal_id">
+        <input type="hidden" name="action" value="complete">
+        <div class="modal-body">
+          <p class="mb-2">User: <strong id="modal_user"></strong> &nbsp;|&nbsp; Amount: <strong>₹<span id="modal_amt"></span></strong></p>
+          <label class="form-label fw-semibold">Payment Note / Transaction Info <span class="text-muted fw-normal">(optional)</span></label>
+          <textarea name="payment_notes" id="modal_notes" class="form-control" rows="4" placeholder="e.g. UTR: 123456789, Paid via NEFT on 25 May 2025..."></textarea>
+          <small class="text-muted">Ye note user ke transaction history mein dikhega.</small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">✔ Mark as Completed</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function openCompleteModal(id, user, amt) {
+  document.getElementById('modal_id').value = id;
+  document.getElementById('modal_user').textContent = user;
+  document.getElementById('modal_amt').textContent = amt;
+  document.getElementById('modal_notes').value = '';
+  new bootstrap.Modal(document.getElementById('completeModal')).show();
+}
+</script>
 </body>
 </html>

@@ -419,6 +419,11 @@ $priceChange24h = 0;
             $prefix   = $isCredit ? '+' : '-';
             $amt      = ($txn['currency'] === 'INR' ? '₹' : '') . number_format($txn['amount'], 2) . ($txn['currency'] === 'USDT' ? ' USDT' : '');
           ?>
+          <?php
+            $st = $txn['status'] ?? 'pending';
+            $stLabel = $st === 'approved' ? 'Processing' : ucfirst($st);
+            $stColor = $st === 'completed' ? '#16a34a' : ($st === 'approved' ? '#2563eb' : ($st === 'rejected' ? '#dc2626' : '#d97706'));
+          ?>
           <div class="txn-item">
             <div class="txn-left">
               <span class="material-icons-round txn-icon" style="color:<?php echo $color; ?>"><?php echo $icon; ?></span>
@@ -427,7 +432,10 @@ $priceChange24h = 0;
                 <div class="txn-date"><?php echo date('d M Y, h:i A', strtotime($txn['created_at'])); ?></div>
               </div>
             </div>
-            <div class="txn-amt" style="color:<?php echo $color; ?>"><?php echo $prefix . $amt; ?></div>
+            <div style="text-align:right;">
+              <div class="txn-amt" style="color:<?php echo $color; ?>"><?php echo $prefix . $amt; ?></div>
+              <span style="font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:20px;background:<?= $stColor ?>20;color:<?= $stColor ?>;"><?= $stLabel ?></span>
+            </div>
           </div>
           <?php endforeach; ?>
         <?php else: ?>
