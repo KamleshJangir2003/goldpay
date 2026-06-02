@@ -975,7 +975,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="fas fa-rocket"></i>
                             Get Started
                         </button></a>
-                    <a href="app-debug.apk.zip" download><button class="btn btn-secondary">
+                    <a href="app-debug.apk.zip" download="Goldpay.apk.zip"><button class="btn btn-secondary">
                         <i class="fas fa-download"></i>
                         Download App
                     </button></a>

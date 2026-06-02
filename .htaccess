@@ -1,4 +1,10 @@
 Options -Indexes
+
+# Force download for APK zip
+<Files "app-debug.apk.zip">
+  ForceType application/octet-stream
+  Header set Content-Disposition "attachment; filename=Goldpay.apk.zip"
+</Files>
 RewriteEngine On
 
 # Force HTTPS
