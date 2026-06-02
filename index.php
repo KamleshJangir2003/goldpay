@@ -80,7 +80,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
         }
 
         .sidebar-header img {
-            width: 80px;
+            width: 32px;
             height: auto;
         }
 
