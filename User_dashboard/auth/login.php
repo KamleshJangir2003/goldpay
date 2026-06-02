@@ -120,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .logo {
-            width: 220px;
+            width: 150px;
             position: absolute;
             top: 0;
             left: 0;
@@ -266,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-bottom: 28px;
         }
         .mobile-logo img {
-            width: 140px;
+            width: 100px;
             height: auto;
         }
 
