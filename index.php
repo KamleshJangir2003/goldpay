@@ -80,9 +80,8 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
         }
 
         .sidebar-header img {
-            width: 130px;
+            width: 80px;
             height: auto;
-            margin-top: 0;
         }
 
         .nav-links {
@@ -93,7 +92,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
         }
 
         .rupeee img {
-            width: 200px;
+            width: 90px;
             height: auto;
         }
 
@@ -508,7 +507,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
         }
 
         .footer-logo img {
-            height: 40px;
+            height: 28px;
         }
 
         .copyright {
@@ -584,7 +583,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             }
 
             .footer-logo img {
-                height: 50px;
+                height: 28px;
             }
         }
 
@@ -603,7 +602,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
             }
 
             .footer-logo img {
-                height: 60px;
+                height: 28px;
             }
         }
 
