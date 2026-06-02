@@ -408,9 +408,6 @@ $priceChange24h = 0;
         <h3><span class="material-icons-round">flash_on</span> Quick Actions</h3>
       </div>
       <div class="actions-grid">
-        <a href="../page/sdw/buy.php" class="action-btn">
-          <span class="material-icons-round">shopping_cart</span><span>Buy USDT</span>
-        </a>
         <a href="../page/sdw/sell.php" class="action-btn">
           <span class="material-icons-round">upload</span><span>Sell USDT</span>
         </a>
