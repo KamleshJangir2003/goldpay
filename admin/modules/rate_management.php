@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sell_price_1'])) {
 
 // Handle wallet address update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wallet_network'])) {
-    $wnet = in_array($_POST['wallet_network'] ?? '', ['TRC20','ERC20','BEP20']) ? $_POST['wallet_network'] : '';
+    $wnet = ($_POST['wallet_network'] ?? '') === 'TRC20' ? 'TRC20' : '';
     if ($wnet) {
         $waddr = trim($_POST['wallet_address'] ?? '');
         $wkey = 'usdt_wallet_' . strtolower($wnet);
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wallet_network'])) {
 
 // Handle QR upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qr_image']) && $_FILES['qr_image']['error'] === UPLOAD_ERR_OK) {
-    $network = in_array($_POST['qr_network'] ?? '', ['TRC20','ERC20','BEP20']) ? $_POST['qr_network'] : '';
+    $network = ($_POST['qr_network'] ?? '') === 'TRC20' ? 'TRC20' : '';
     if ($network) {
         $ext = strtolower(pathinfo($_FILES['qr_image']['name'], PATHINFO_EXTENSION));
         if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
@@ -75,7 +75,7 @@ $sellLabel2 = getSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 
 // Get current QRs and wallet addresses
 $qrImages = []; $walletAddresses = [];
-foreach (['TRC20','ERC20','BEP20'] as $net) {
+foreach (['TRC20'] as $net) {
     $k = 'usdt_qr_' . strtolower($net);
     $r = $conn->query("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key='$k'");
     $qrImages[$net] = ($r && $qr = $r->fetch_assoc()) ? $qr['setting_value'] : null;
@@ -346,7 +346,7 @@ foreach (['TRC20','ERC20','BEP20'] as $net) {
           <div class="adm-card-desc">Upload QR codes for each blockchain network</div>
         </div>
       </div>
-      <?php foreach (['TRC20','ERC20','BEP20'] as $net): ?>
+      <?php foreach (['TRC20'] as $net): ?>
       <div class="qr-item">
         <div class="qr-item-left">
           <?php if ($qrImages[$net]): ?>

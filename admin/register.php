@@ -108,10 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .logo {
-            width: 220px;
-            position: absolute;
-            top: 0;
-            left: 0;
+            width: 120px;
+            height: auto;
+            display: block;
+            margin: 0 0 30px 0;
+            position: static;
         }
 
         .left-content {
@@ -211,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .mobile-logo { display: none; text-align: center; margin-bottom: 28px; }
-        .mobile-logo img { width: 140px; height: auto; }
+        .mobile-logo img { width: 100px; height: auto; }
 
         @media (max-width: 1024px) {
             body { flex-direction: column; }
@@ -234,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <div class="left-section">
-    <a href="login.php"><img src="uploads/logo.png" alt="Admin Logo" class="logo"></a>
+    <a href="login.php"><img src="../User_dashboard/image/logo.png" alt="Goldpay Logo" class="logo"></a>
     <div class="left-content">
         <h1 class="left-title">Create Admin Account</h1>
         <p class="left-subtitle">Register to access the admin panel securely.</p>
@@ -242,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="right-section">
-    <div class="mobile-logo"><a href="login.php"><img src="uploads/dollario-logo.png" alt="Dollario"></a></div>
+    <div class="mobile-logo"><a href="login.php"><img src="../User_dashboard/image/logo.png" alt="Goldpay"></a></div>
     <h2 class="form-title">Admin Register</h2>
     <p class="form-subtitle">Fill the details below to create your accounts</p>
 

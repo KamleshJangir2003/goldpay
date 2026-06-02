@@ -25,7 +25,7 @@ require '../../config/usdt_rate.php';
 
 // Fetch wallet addresses and QR images from settings
 $wallets = []; $qrImages = [];
-foreach (['TRC20','ERC20','BEP20'] as $net) {
+foreach (['TRC20'] as $net) {
     $r = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_group='qr' AND setting_key=?");
     $r->execute(['usdt_wallet_' . strtolower($net)]);
     $wallets[$net] = ($row = $r->fetch(PDO::FETCH_ASSOC)) ? $row['setting_value'] : '';
@@ -169,8 +169,6 @@ $deposits = $history->fetchAll(PDO::FETCH_ASSOC);
   <!-- Network Tabs -->
   <div class="network-tabs">
     <div class="net-tab active" onclick="switchNet('TRC20',this)">TRC20</div>
-    <div class="net-tab" onclick="switchNet('ERC20',this)">ERC20</div>
-    <div class="net-tab" onclick="switchNet('BEP20',this)">BEP20</div>
   </div>
 
   <!-- Wallet Address Display -->
@@ -229,15 +227,11 @@ $deposits = $history->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 const wallets = {
-  TRC20: '<?= $wallets['TRC20'] ?>',
-  ERC20: '<?= $wallets['ERC20'] ?>',
-  BEP20: '<?= $wallets['BEP20'] ?>'
+  TRC20: '<?= $wallets['TRC20'] ?>'
 };
 
 const qrImages = {
-  TRC20: '<?= $qrImages['TRC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['TRC20']) : '' ?>',
-  ERC20: '<?= $qrImages['ERC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['ERC20']) : '' ?>',
-  BEP20: '<?= $qrImages['BEP20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['BEP20']) : '' ?>'
+  TRC20: '<?= $qrImages['TRC20'] ? '../../../admin/uploads/' . htmlspecialchars($qrImages['TRC20']) : '' ?>'
 };
 
 function switchNet(net, el) {

@@ -51,7 +51,7 @@ if (!defined('BASE_URL')) require_once __DIR__ . '/../includes/config.php';
     padding: 12px 0;
     border-bottom: 1px solid #1d2e49;
   }
-  .adm-sidebar .adm-logo img { width: 140px; height: auto; display: block; margin: 0 auto; }
+  .adm-sidebar .adm-logo img { width: 80px; height: auto; display: block; margin: 0 auto; }
   .adm-topbar img { height: auto; width: 100px; }
 
   .adm-menu { list-style: none; padding: 0; margin: 0; flex: 1; }
