@@ -839,7 +839,7 @@ $pageTitle = "Goldpay - Crypto Exchange";
     <header>
         <nav class="nav-container">
             <div class="sidebar-header">
-                <img src="uploads/Dollario-logo .svg" alt="Logo">
+                <img src="../User_dashboard/image/logo.png" alt="Goldpay Logo">
             </div>
             <div class="nav-links">
                 <a href="#"><i class="fas fa-exchange-alt"></i> Trade</a>
@@ -1119,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="footer-bottom">
             <div class="footer-logo">
-                <img src="uploads/Dollario-logo .svg" alt="DollarRio Logo">
+                <img src="../User_dashboard/image/logo.png" alt="Goldpay Logo">
             </div>
             <p class="copyright">© 2026 Goldpay. All Rights Reserved.</p>
         </div>

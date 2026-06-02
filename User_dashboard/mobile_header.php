@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../responsive.css">
 <header id="mobileHeader">
   <div class="logo-container">
-    <img src="../image/logo.png" alt="Dollario" style="height:auto;width:150px;">
+    <img src="../image/logo.png" alt="Goldpay" style="height:auto;width:80px;">
   </div>
   <div class="menu-container">
     <button class="menu-btn" id="menuToggle">☰</button>

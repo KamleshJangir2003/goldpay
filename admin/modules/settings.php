@@ -65,7 +65,8 @@ function saveGeneralSettings($pdo) {
         'user_registration' => isset($_POST['user_registration']) ? 1 : 0,
         'email_verification' => isset($_POST['email_verification']) ? 1 : 0,
         'kyc_verification' => isset($_POST['kyc_verification']) ? 1 : 0,
-        'session_timeout' => $_POST['session_timeout']
+        'session_timeout' => $_POST['session_timeout'],
+        'telegram_url'   => $_POST['telegram_url'] ?? ''
     ];
     
     $pdo->beginTransaction();
@@ -777,6 +778,12 @@ $activePage = "Settings";
                             <label for="companyAddress">Address</label>
                             <textarea id="companyAddress" name="company_address" class="form-control"><?= 
                                     htmlspecialchars($settings['general']['company_address'] ?? '') ?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="telegramUrl">Telegram Channel URL</label>
+                            <input type="url" id="telegramUrl" name="telegram_url" class="form-control"
+                                placeholder="https://t.me/yourchannel"
+                                value="<?= htmlspecialchars($settings['general']['telegram_url'] ?? '') ?>">
                         </div>
                     </div>
 

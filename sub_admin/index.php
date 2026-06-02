@@ -354,7 +354,7 @@ $pageTitle = "DollaRio - Crypto Exchange";
     <header>
         <nav class="nav-container">
             <div class="sidebar-header">
-                <img src="uploads/Dollario-logo .svg" alt="Logo">
+                <img src="../User_dashboard/image/logo.png" alt="Goldpay Logo">
             </div>
             <div class="nav-links">
                 <a href="#"><i class="fas fa-exchange-alt"></i> Trade</a>

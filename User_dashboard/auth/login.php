@@ -319,7 +319,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </style>
 <body>
     <div class="left-section">
-        <a href="../index.php"><img src="../image/logo.png" alt="Dollario Logo" class="logo"></a>
+        <a href="../index.php"><img src="../image/logo.png" alt="Goldpay Logo" class="logo"></a>
         <div class="left-content">
             <h1 class="left-title">Welcome Back to Goldpay</h1>
             <p class="left-subtitle">Log in and continue your crypto journey.</p>

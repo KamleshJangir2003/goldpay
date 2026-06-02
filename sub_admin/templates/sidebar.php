@@ -69,7 +69,7 @@
 
   <div class="sidebar">
     <div class="logo">
-      <img src="../uploads/Dollario-logo.png" alt="" style="height: auto; width: 200px;">
+      <img src="../../User_dashboard/image/logo.png" alt="Goldpay" style="height: auto; width: 80px;">
     </div>
     <ul class="menu">
       <li class="section">Main</li>

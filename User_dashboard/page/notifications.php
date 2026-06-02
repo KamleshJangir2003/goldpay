@@ -1,6 +1,5 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_name('user_session'); session_start(); }
-include('submit_help.php');
 
 require_once __DIR__ . '/../config/db.php';
 
@@ -26,7 +25,8 @@ $stmt  = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result        = $stmt->get_result();
-$user_settings = $result->fetch_assoc() ?? $default_settings;
+$row           = $result->fetch_assoc();
+$user_settings = array_merge($default_settings, $row ?? []);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deposit_alert      = isset($_POST['deposit_alert'])      ? 1 : 0;
