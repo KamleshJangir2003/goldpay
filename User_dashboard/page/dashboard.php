@@ -223,9 +223,12 @@ $priceChange24h = 0;
       font-size: 0.8rem;
       font-weight: 500;
       transition: background 0.2s;
+      text-align: center;
+      line-height: 1.3;
     }
     .action-btn:hover { background: #e2e8f0; }
     .action-btn .material-icons-round { font-size: 22px; color: var(--primary); }
+    .action-btn span:last-child { word-break: break-word; }
 
     /* ── Full-width card ── */
     .card.full { grid-column: 1 / -1; }
@@ -263,23 +266,36 @@ $priceChange24h = 0;
       .welcome-bar h2 { font-size: 1.1rem; }
 
       .stats-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
         margin-bottom: 14px;
       }
+      .stats-row .stat-card:first-child {
+        grid-column: 1 / -1;
+      }
 
       .stat-card { padding: 14px 16px; }
-      .stat-card .value { font-size: 1.2rem; }
+      .stat-card .value { font-size: 1.15rem; }
 
       .main-grid {
         grid-template-columns: 1fr;
         gap: 12px;
       }
 
-      .card { padding: 16px; }
+      .card { padding: 14px; }
 
-      .actions-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .action-btn { padding: 12px 8px; font-size: 0.75rem; }
+      .actions-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .action-btn {
+        padding: 10px 4px;
+        font-size: 0.68rem;
+        gap: 4px;
+        border-radius: 10px;
+      }
+      .action-btn .material-icons-round { font-size: 20px; }
+      .action-btn span:last-child { word-break: break-word; line-height: 1.2; }
 
       .price-row .p-val { font-size: 1rem; }
 
@@ -290,7 +306,8 @@ $priceChange24h = 0;
 
     @media (max-width: 400px) {
       .stats-row { grid-template-columns: 1fr; }
-      .actions-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-row .stat-card:first-child { grid-column: auto; }
+      .actions-grid { grid-template-columns: repeat(3, 1fr); }
       .welcome-bar h2 { font-size: 1rem; }
     }
   </style>
@@ -392,22 +409,22 @@ $priceChange24h = 0;
       </div>
       <div class="actions-grid">
         <a href="../page/sdw/buy.php" class="action-btn">
-          <span class="material-icons-round">shopping_cart</span>Buy USDT
+          <span class="material-icons-round">shopping_cart</span><span>Buy USDT</span>
         </a>
         <a href="../page/sdw/sell.php" class="action-btn">
-          <span class="material-icons-round">upload</span>Sell USDT
+          <span class="material-icons-round">upload</span><span>Sell USDT</span>
         </a>
         <a href="../page/sdw/usdt_deposit.php" class="action-btn">
-          <span class="material-icons-round">currency_bitcoin</span>Deposit USDT
+          <span class="material-icons-round">currency_bitcoin</span><span>USDT Deposit</span>
         </a>
         <a href="../page/sdw/deposit.php" class="action-btn">
-          <span class="material-icons-round">account_balance</span>Deposit INR
+          <span class="material-icons-round">account_balance</span><span>INR Deposit</span>
         </a>
         <a href="../page/sdw/withdraw.php" class="action-btn">
-          <span class="material-icons-round">payments</span>Withdraw INR
+          <span class="material-icons-round">payments</span><span>Withdraw</span>
         </a>
         <a href="transactions.php" class="action-btn">
-          <span class="material-icons-round">receipt_long</span>History
+          <span class="material-icons-round">receipt_long</span><span>History</span>
         </a>
       </div>
     </div>
