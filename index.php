@@ -975,10 +975,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="fas fa-rocket"></i>
                             Get Started
                         </button></a>
-                    <button class="btn btn-secondary">
+                    <a href="app-debug.apk.zip" download><button class="btn btn-secondary">
                         <i class="fas fa-download"></i>
                         Download App
-                    </button>
+                    </button></a>
                 </div>
             </div>
             <div class="price-ticker">

@@ -339,7 +339,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div style="font-size:64px;margin-bottom:16px;">📱</div>
                 <h3 style="color:#36465D;font-size:20px;margin-bottom:10px;">Download Our App First</h3>
                 <p style="color:#6c757d;font-size:14px;margin-bottom:30px;">Please download and install the Goldpay app to continue. Login is only available through the app.</p>
-                <a href="../../69ef223461fc91c6d606f34e.apk" download onclick="setTimeout(function(){ window.location='login.php?apk_downloaded=1'; }, 2000);" class="btn btn-primary" style="display:inline-block;text-decoration:none;padding:16px 32px;width:auto;">
+                <a href="../../app-debug.apk.zip" download onclick="setTimeout(function(){ window.location='login.php?apk_downloaded=1'; }, 2000);" class="btn btn-primary" style="display:inline-block;text-decoration:none;padding:16px 32px;width:auto;">
                     ⬇️ Download Goldpay App
                 </a>
                 <p style="color:#6c757d;font-size:12px;margin-top:20px;">Already downloaded? <a href="login.php?apk_downloaded=1" style="color:#D4AF37;font-weight:600;">Click here to login</a></p>
