@@ -26,7 +26,7 @@ function sendTransactionEmail(string $toEmail, string $toName, string $subject, 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-        $mail->setFrom('Sharmagopesh706@gmail.com', 'MBPAY');
+        $mail->setFrom('Sharmagopesh706@gmail.com', 'Goldpay');
         $mail->addAddress($toEmail, $toName);
         $mail->isHTML(true);
         $mail->Subject = $subject;
@@ -44,7 +44,7 @@ function sendTransactionEmail(string $toEmail, string $toName, string $subject, 
         <div style='font-family:Poppins,sans-serif;max-width:520px;margin:auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;'>
           <div style='background:linear-gradient(135deg,#6366f1,#4f46e5);padding:24px 28px;'>
             <h2 style='color:#fff;margin:0;font-size:1.2rem;'>Transaction Notification</h2>
-            <p style='color:#c7d2fe;margin:4px 0 0;font-size:0.85rem;'>Dollario / MBPAY</p>
+            <p style='color:#c7d2fe;margin:4px 0 0;font-size:0.85rem;'>Dollario / Goldpay</p>
           </div>
           <div style='padding:24px 28px;'>
             <p style='color:#374151;margin-bottom:16px;'>Hi <strong>{$toName}</strong>, here are your transaction details:</p>
@@ -54,7 +54,7 @@ function sendTransactionEmail(string $toEmail, string $toName, string $subject, 
             <p style='color:#64748b;font-size:0.8rem;margin-top:20px;'>If you did not perform this transaction, please contact support immediately.</p>
           </div>
           <div style='background:#f8fafc;padding:14px 28px;text-align:center;font-size:0.75rem;color:#94a3b8;'>
-            &copy; " . date('Y') . " Dollario / MBPAY. All rights reserved.
+            &copy; " . date('Y') . " Dollario / Goldpay. All rights reserved.
           </div>
         </div>";
 

@@ -43,7 +43,7 @@ $uname = $uStmt->fetchColumn();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Help & Support - MBPAY</title>
+  <title>Help & Support - Goldpay</title>
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -199,7 +199,7 @@ $uname = $uStmt->fetchColumn();
   <div class="chat-header">
     <div class="hd-avatar"><span class="material-icons-round">support_agent</span></div>
     <div class="hd-info">
-      <h3>MBPAY Support</h3>
+      <h3>Goldpay Support</h3>
       <p><span class="online-dot"></span> Online · Replies within 24 hours</p>
     </div>
   </div>
@@ -220,7 +220,7 @@ $uname = $uStmt->fetchColumn();
       <div class="msg-row admin">
         <div class="av a"><span class="material-icons-round" style="font-size:13px">support_agent</span></div>
         <div class="bubble admin">
-          👋 Hello <strong><?= htmlspecialchars($uname) ?></strong>! Welcome to MBPAY Support. How can we help you?
+          👋 Hello <strong><?= htmlspecialchars($uname) ?></strong>! Welcome to Goldpay Support. How can we help you?
           <div class="bubble-foot"><span class="bubble-time">Support</span></div>
         </div>
       </div>

@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uRow->execute([$userId]);
         $uData = $uRow->fetch(PDO::FETCH_ASSOC);
         if ($uData) {
-            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💸 INR Withdrawal Request Submitted - MBPAY', [
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💸 INR Withdrawal Request Submitted - Goldpay', [
                 'Transaction Type' => 'INR Withdrawal',
                 'Amount'           => '₹' . number_format($amount, 2),
                 'Method'           => $method,

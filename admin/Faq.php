@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAQ - MBPAY</title>
+  <title>FAQ - Goldpay</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <style>
     body {
@@ -108,9 +108,9 @@
   <div class="faq-container">
 
     <div class="faq-section">
-      <div class="faq-question">What is MBPAY?<span class="toggle-icon">+</span></div>
+      <div class="faq-question">What is Goldpay?<span class="toggle-icon">+</span></div>
       <div class="faq-answer">
-        MBPAY is a secure cryptocurrency exchange that allows users to buy and sell USDT with INR instantly. We offer low fees, strong security, real-time trading, and a user-friendly platform suitable for both beginners and professionals.
+        Goldpay is a secure cryptocurrency exchange that allows users to buy and sell USDT with INR instantly. We offer low fees, strong security, real-time trading, and a user-friendly platform suitable for both beginners and professionals.
       </div>
     </div>
 
@@ -128,7 +128,7 @@
     </div>
 
     <div class="faq-section">
-      <div class="faq-question">Is my data secure on MBPAY?<span class="toggle-icon">+</span></div>
+      <div class="faq-question">Is my data secure on Goldpay?<span class="toggle-icon">+</span></div>
       <div class="faq-answer">
         Absolutely. We use AES-256 encryption for stored data, SSL certificates for data transmission, and 2FA for account security. We do not share your personal information with third parties without your consent.
       </div>
@@ -148,14 +148,14 @@
     </div>
 
     <div class="faq-section">
-      <div class="faq-question">What fees does MBPAY charge?<span class="toggle-icon">+</span></div>
+      <div class="faq-question">What fees does Goldpay charge?<span class="toggle-icon">+</span></div>
       <div class="faq-answer">
         Our standard trading fee is 0.1%. There are no fees on deposits. A small withdrawal fee applies based on network congestion. All fees are displayed clearly before you confirm any transaction.
       </div>
     </div>
 
     <div class="faq-section">
-      <div class="faq-question">Can I use MBPAY on mobile?<span class="toggle-icon">+</span></div>
+      <div class="faq-question">Can I use Goldpay on mobile?<span class="toggle-icon">+</span></div>
       <div class="faq-answer">
         Yes, our platform is fully mobile responsive. Additionally, native apps for Android and iOS are under development and will be released soon.
       </div>
@@ -173,7 +173,7 @@
       <div class="faq-answer">
         You can reach out to our 24/7 support team by:
         <ul>
-          <li>Email: <a href="mailto:support@MBPAY.com">support@MBPAY.com</a></li>
+          <li>Email: <a href="mailto:support@Goldpay.com">support@Goldpay.com</a></li>
           <li>Live chat from the website</li>
           <li>Help Center (Coming Soon)</li>
         </ul>
@@ -183,7 +183,7 @@
   </div>
 
   <footer style="color: #D4AF37;">
-    © 2026 MBPAY. All Rights Reserved.
+    © 2026 Goldpay. All Rights Reserved.
   </footer>
 
   <script>

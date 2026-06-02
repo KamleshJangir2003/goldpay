@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Privacy Policy - MBPAY</title>
+  <title>Privacy Policy - Goldpay</title>
   <style>
     body {
       margin: 0;
@@ -87,7 +87,7 @@
 
   <div class="privacy-container">
     <h2>1. Overview</h2>
-    <p>At MBPAY, we value your privacy and are committed to protecting your personal and financial data. This Privacy Policy outlines how we collect, use, and protect your information when you interact with our platform.</p>
+    <p>At Goldpay, we value your privacy and are committed to protecting your personal and financial data. This Privacy Policy outlines how we collect, use, and protect your information when you interact with our platform.</p>
 
     <h2>2. Information We Collect</h2>
     <p>We may collect the following types of information:</p>
@@ -130,11 +130,11 @@
     <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date.</p>
 
     <h2>10. Contact Us</h2>
-    <p>For any privacy-related inquiries, please contact us at <a href="mailto:support@MBPAY.com">support@MBPAY.com</a>.</p>
+    <p>For any privacy-related inquiries, please contact us at <a href="mailto:support@Goldpay.com">support@Goldpay.com</a>.</p>
   </div>
 
   <footer>
-    © 2026 MBPAY. All Rights Reserved.
+    © 2026 Goldpay. All Rights Reserved.
   </footer>
 
 </body>

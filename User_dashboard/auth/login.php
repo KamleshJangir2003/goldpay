@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mbpay - User Login</title>
+    <title>Goldpay - User Login</title>
     <link rel="icon" type="image/x-icon" href="../../favicon.ico">
     <!-- <link rel="stylesheet" href="style.css"> -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -321,7 +321,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="left-section">
         <a href="../index.php"><img src="../image/logo.png" alt="Dollario Logo" class="logo"></a>
         <div class="left-content">
-            <h1 class="left-title">Welcome Back to MBPAY</h1>
+            <h1 class="left-title">Welcome Back to Goldpay</h1>
             <p class="left-subtitle">Log in and continue your crypto journey.</p>
         </div>
     </div>
@@ -338,9 +338,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div style="text-align:center;padding:20px 0;">
                 <div style="font-size:64px;margin-bottom:16px;">📱</div>
                 <h3 style="color:#36465D;font-size:20px;margin-bottom:10px;">Download Our App First</h3>
-                <p style="color:#6c757d;font-size:14px;margin-bottom:30px;">Please download and install the MBPAY app to continue. Login is only available through the app.</p>
+                <p style="color:#6c757d;font-size:14px;margin-bottom:30px;">Please download and install the Goldpay app to continue. Login is only available through the app.</p>
                 <a href="../../69ef223461fc91c6d606f34e.apk" download onclick="setTimeout(function(){ window.location='login.php?apk_downloaded=1'; }, 2000);" class="btn btn-primary" style="display:inline-block;text-decoration:none;padding:16px 32px;width:auto;">
-                    ⬇️ Download MBPAY App
+                    ⬇️ Download Goldpay App
                 </a>
                 <p style="color:#6c757d;font-size:12px;margin-top:20px;">Already downloaded? <a href="login.php?apk_downloaded=1" style="color:#D4AF37;font-weight:600;">Click here to login</a></p>
             </div>

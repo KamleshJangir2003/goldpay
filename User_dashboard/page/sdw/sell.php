@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uRow->execute([$userId]);
         $uData = $uRow->fetch(PDO::FETCH_ASSOC);
         if ($uData) {
-            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Sell USDT Successful - MBPAY', [
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Sell USDT Successful - Goldpay', [
                 'Transaction Type' => 'Sell USDT',
                 'USDT Sold'        => number_format($amount, 4) . ' USDT',
                 'INR Received'     => '₹' . number_format($inrCredit, 2),

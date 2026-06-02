@@ -1,6 +1,6 @@
 <?php
 // DB connection (adjust credentials)
-$conn = new mysqli("localhost", "u621774021_pay", "Mbpay999", "u621774021_mbpay");
+$conn = new mysqli("localhost", "u621774021_pay", "Goldpay999", "u621774021_Goldpay");
 
 // Handle errors
 if ($conn->connect_error) {

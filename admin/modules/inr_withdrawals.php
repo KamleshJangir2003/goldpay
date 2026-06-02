@@ -36,7 +36,7 @@ function sendStatusEmail($email, $username, $subject, $details) {
         <div style='font-family:Poppins,sans-serif;max-width:520px;margin:auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;'>
           <div style='background:linear-gradient(135deg,#6366f1,#4f46e5);padding:24px 28px;'>
             <h2 style='color:#fff;margin:0;font-size:1.2rem;'>Payment Status Update</h2>
-            <p style='color:#c7d2fe;margin:4px 0 0;font-size:0.85rem;'>MBPAY</p>
+            <p style='color:#c7d2fe;margin:4px 0 0;font-size:0.85rem;'>Goldpay</p>
           </div>
           <div style='padding:24px 28px;'>
             <p style='color:#374151;margin-bottom:16px;'>Hi <strong>{$username}</strong>, your withdrawal status has been updated:</p>
@@ -46,7 +46,7 @@ function sendStatusEmail($email, $username, $subject, $details) {
             <p style='color:#64748b;font-size:0.8rem;margin-top:20px;'>If you have any questions, please contact support.</p>
           </div>
           <div style='background:#f8fafc;padding:14px 28px;text-align:center;font-size:0.75rem;color:#94a3b8;'>
-            &copy; " . date('Y') . " MBPAY. All rights reserved.
+            &copy; " . date('Y') . " Goldpay. All rights reserved.
           </div>
         </div>";
         
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id']
         if ($row) {
             // Match by user_id + type + CAST amount to avoid decimal precision mismatch
             $conn->query("UPDATE user_transactions SET status = 'approved' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND CAST(amount AS DECIMAL(10,2)) = CAST({$row['amount']} AS DECIMAL(10,2)) AND status = 'pending' ORDER BY created_at DESC LIMIT 1");
-            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Approved - MBPAY', [
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Approved - Goldpay', [
                 'Transaction Type' => 'INR Withdrawal',
                 'Amount'           => '₹' . number_format($row['amount'], 2),
                 'Method'           => $row['method'],
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id']
             // User notification
             $notif_msg = "Your INR withdrawal of ₹" . number_format($row['amount'], 2) . " has been completed." . ($payment_notes ? " Note: $payment_notes" : "");
             $conn->query("INSERT INTO user_notifications (user_id, title, message, type) VALUES ({$row['user_id']}, 'Withdrawal Completed ✅', '" . $conn->real_escape_string($notif_msg) . "', 'transaction')");
-            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Completed - MBPAY', [
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '✅ INR Withdrawal Completed - Goldpay', [
                 'Transaction Type' => 'INR Withdrawal',
                 'Amount'           => '₹' . number_format($row['amount'], 2),
                 'Method'           => $row['method'],
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['action'], $_POST['id']
         if ($row) {
             $conn->query("UPDATE wallets SET inr_balance = inr_balance + {$row['amount']} WHERE user_id = {$row['user_id']}");
             $conn->query("UPDATE user_transactions SET status = 'rejected' WHERE user_id = {$row['user_id']} AND type = 'withdraw_inr' AND amount = {$row['amount']} AND status = 'pending' LIMIT 1");
-            sendStatusEmail($row['email'], $row['username'] ?? 'User', '❌ INR Withdrawal Rejected - MBPAY', [
+            sendStatusEmail($row['email'], $row['username'] ?? 'User', '❌ INR Withdrawal Rejected - Goldpay', [
                 'Transaction Type' => 'INR Withdrawal',
                 'Amount'           => '₹' . number_format($row['amount'], 2),
                 'Method'           => $row['method'],

@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uRow->execute([$userId]);
         $uData = $uRow->fetch(PDO::FETCH_ASSOC);
         if ($uData) {
-            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Buy USDT Successful - MBPAY', [
+            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '✅ Buy USDT Successful - Goldpay', [
                 'Transaction Type' => 'Buy USDT',
                 'INR Spent'        => '₹' . number_format($inrAmount, 2),
                 'USDT Received'    => number_format($usdtGet, 4) . ' USDT',

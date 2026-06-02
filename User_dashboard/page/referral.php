@@ -58,7 +58,7 @@ $referral_link = $base_url . $auth_dir . '/signup.php?ref=' . urlencode($referra
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Referral Program | MBPAY</title>
+  <title>Referral Program | Goldpay</title>
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="referral.css">
@@ -187,7 +187,7 @@ $referral_link = $base_url . $auth_dir . '/signup.php?ref=' . urlencode($referra
       <div class="step-item">
         <div class="step-num">2</div>
         <h4>They Sign Up</h4>
-        <p>Your friend registers on MBPAY using your referral link and completes KYC verification</p>
+        <p>Your friend registers on Goldpay using your referral link and completes KYC verification</p>
       </div>
       <div class="step-item">
         <div class="step-num">3</div>

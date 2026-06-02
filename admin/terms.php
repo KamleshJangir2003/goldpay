@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Terms & Conditions - MBPAY</title>
+  <title>Terms & Conditions - Goldpay</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <style>
     body {
@@ -91,7 +91,7 @@
 
   <div class="terms-container">
     <h2>1. Introduction</h2>
-    <p>Welcome to MBPAY, a secure and reliable platform for cryptocurrency trading. These Terms & Conditions govern your use of our services. By using our website or mobile app, you agree to comply with and be bound by these terms.</p>
+    <p>Welcome to Goldpay, a secure and reliable platform for cryptocurrency trading. These Terms & Conditions govern your use of our services. By using our website or mobile app, you agree to comply with and be bound by these terms.</p>
 
     <h2>2. Acceptance of Terms</h2>
     <p>By creating an account or using any of our services, you confirm that you have read, understood, and accepted all the terms set forth in this document, along with our Privacy Policy.</p>
@@ -103,7 +103,7 @@
     <p>You are required to provide accurate and complete information when creating an account. You are responsible for maintaining the confidentiality of your login credentials and are fully responsible for all activities that occur under your account.</p>
 
     <h2>5. KYC & AML Compliance</h2>
-    <p>MBPAY follows strict Know Your Customer (KYC) and Anti-Money Laundering (AML) regulations. We may require you to submit identity verification documents before allowing you to trade or withdraw funds.</p>
+    <p>Goldpay follows strict Know Your Customer (KYC) and Anti-Money Laundering (AML) regulations. We may require you to submit identity verification documents before allowing you to trade or withdraw funds.</p>
 
     <h2>6. Fees & Charges</h2>
     <p>We charge a small transaction fee of 0.1% on each trade. Additional fees may apply for deposits, withdrawals, or third-party services. All fees are subject to change with prior notice.</p>
@@ -121,23 +121,23 @@
     <p>We reserve the right to suspend or terminate your account if you violate any of these terms, misuse the platform, or engage in any fraudulent or harmful activity.</p>
 
     <h2>11. Limitation of Liability</h2>
-    <p>MBPAY is not liable for any indirect, incidental, or consequential damages arising out of your use of the platform. We do not offer any guarantees regarding profits or performance.</p>
+    <p>Goldpay is not liable for any indirect, incidental, or consequential damages arising out of your use of the platform. We do not offer any guarantees regarding profits or performance.</p>
 
     <h2>12. Indemnification</h2>
-    <p>You agree to indemnify and hold harmless MBPAY and its affiliates, employees, and partners from any claims, damages, or expenses arising from your use of our services or violation of these terms.</p>
+    <p>You agree to indemnify and hold harmless Goldpay and its affiliates, employees, and partners from any claims, damages, or expenses arising from your use of our services or violation of these terms.</p>
 
     <h2>13. Modifications to Terms</h2>
     <p>We reserve the right to update these Terms & Conditions at any time. Updates will be posted on this page and become effective immediately. Your continued use of our services indicates your acceptance of the changes.</p>
 
     <h2>14. Governing Law</h2>
-    <p>These Terms are governed by and construed in accordance with the laws of the jurisdiction in which MBPAY is registered. Any disputes shall be resolved in that jurisdiction’s courts.</p>
+    <p>These Terms are governed by and construed in accordance with the laws of the jurisdiction in which Goldpay is registered. Any disputes shall be resolved in that jurisdiction’s courts.</p>
 
     <h2>15. Contact Us</h2>
-    <p>If you have any questions regarding these Terms & Conditions, please email us at <a href="mailto:support@MBPAY.com">support@MBPAY.com</a>.</p>
+    <p>If you have any questions regarding these Terms & Conditions, please email us at <a href="mailto:support@Goldpay.com">support@Goldpay.com</a>.</p>
   </div>
 
   <footer style="color: #D4AF37;">
-    © 2026 MBPAY. All Rights Reserved.
+    © 2026 Goldpay. All Rights Reserved.
   </footer>
 
 </body>

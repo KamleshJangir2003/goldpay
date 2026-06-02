@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $refUserStmt = $pdo->prepare("SELECT username, referral_code FROM users WHERE id = ?");
                     $refUserStmt->execute([$referred_by_id]);
                     $refUser = $refUserStmt->fetch(PDO::FETCH_ASSOC);
-                    sendTransactionEmail('Sharmagopesh706@gmail.com', 'Admin', '👤 New User Registered - MBPAY', [
+                    sendTransactionEmail('Sharmagopesh706@gmail.com', 'Admin', '👤 New User Registered - Goldpay', [
                         'New Username'   => $username,
                         'Email'          => $email,
                         'Referral Code Used' => $ref_code_input,
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - MBPAY</title>
+    <title>Sign Up - Goldpay</title>
     <link rel="icon" type="image/x-icon" href="../../favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>

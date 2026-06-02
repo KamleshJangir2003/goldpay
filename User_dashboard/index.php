@@ -1,6 +1,6 @@
 <?php
 // index.php
-$pageTitle = "MBPAY - Crypto Exchange";
+$pageTitle = "Goldpay - Crypto Exchange";
 require_once __DIR__ . '/config/db.php';
 
 // Fetch both USDT rates from admin settings
@@ -19,7 +19,7 @@ $sellLabel2 = getAdminSetting($conn, 'usdt_sell_label_2', 'Premium Rate');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mbpay - Crypto Exchange</title>
+    <title>Goldpay - Crypto Exchange</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -1076,9 +1076,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             <div class="faq-grid">
                 <div class="faq-item">
-                    <div class="faq-question">What is MBPAY?</div>
+                    <div class="faq-question">What is Goldpay?</div>
                     <div class="faq-answer">
-                        MBPAY is a leading cryptocurrency exchange platform that allows you to buy and sell USDT
+                        Goldpay is a leading cryptocurrency exchange platform that allows you to buy and sell USDT
                         with INR instantly. We provide a secure, fast, and user-friendly platform for all your crypto
                         trading needs with competitive rates and low fees.
                     </div>
@@ -1094,9 +1094,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">What are the advantages of using MBPAY over your competitors?</div>
+                    <div class="faq-question">What are the advantages of using Goldpay over your competitors?</div>
                     <div class="faq-answer">
-                        MBPAY offers several advantages including instant transactions, industry-low fees (0.1%),
+                        Goldpay offers several advantages including instant transactions, industry-low fees (0.1%),
                         military-grade security, 24/7 customer support, and a user-friendly interface. We also provide
                         better liquidity and more competitive rates than most competitors.
                     </div>
@@ -1163,8 +1163,8 @@ document.addEventListener('DOMContentLoaded', function () {
     <footer>
         <div class="footer-container">
             <div class="footer-column">
-                <h3>MBPAY</h3>
-                <p>support@MBPAY.in</p>
+                <h3>Goldpay</h3>
+                <p>support@Goldpay.in</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-linkedin"></i></a>
@@ -1196,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="footer-logo">
                 <img src="image/logo.png" alt="DollarRio Logo">
             </div>
-            <p class="copyright">© 2025 MBPAY. All Rights Reserved.</p>
+            <p class="copyright">© 2025 Goldpay. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1285,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', function () {
           { selector: '.price-ticker p', text: 'Current USDT/INR Price' },
           { selector: '.faq-title', text: 'Frequently Asked Questions' },
           { selector: '.newsletter-input button', text: 'Join' },
-          { selector: '.copyright', text: '© 2025 MBPAY. All rights reserved.' },
+          { selector: '.copyright', text: '© 2025 Goldpay. All rights reserved.' },
         ]);
 
         const features = document.querySelectorAll('.feature-content');
@@ -1306,8 +1306,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const faqQ = document.querySelectorAll('.faq-question');
         const faqA = document.querySelectorAll('.faq-answer');
         if (faqQ.length >= 4 && faqA.length >= 4) {
-          faqQ[0].textContent = 'What is MBPAY?';
-          faqA[0].textContent = 'MBPAY is a platform to instantly buy and sell USDT with INR.';
+          faqQ[0].textContent = 'What is Goldpay?';
+          faqA[0].textContent = 'Goldpay is a platform to instantly buy and sell USDT with INR.';
 
           faqQ[1].textContent = 'How do I create an account?';
           faqA[1].textContent = "Just click on 'Get Started', fill out the registration form, and complete verification.";
@@ -1321,7 +1321,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const footers = document.querySelectorAll('.footer-column');
         if (footers.length >= 3) {
-          footers[0].querySelector('h3').textContent = 'MBPAY';
+          footers[0].querySelector('h3').textContent = 'Goldpay';
           footers[1].querySelector('h3').textContent = 'Legal';
           const links = footers[1].querySelectorAll('li a');
           if (links.length >= 2) {

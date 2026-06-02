@@ -68,7 +68,7 @@ $active_count = array_sum(array_values($user_settings));
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notification Settings | MBPAY</title>
+  <title>Notification Settings | Goldpay</title>
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="notifications.css">
