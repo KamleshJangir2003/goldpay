@@ -27,15 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['phone'] = $user['phone'];
     $_SESSION['admin_logged_in'] = true;
 
-    // Log IP & agent
-    $ip_address = $_SERVER['REMOTE_ADDR'];
-    $user_agent = $_SERVER['HTTP_USER_AGENT'];
-
-    $historyStmt = $conn->prepare("INSERT INTO login_history (user_id, ip_address, user_agent) VALUES (?, ?, ?)");
-    $historyStmt->bind_param("iss", $user['id'], $ip_address, $user_agent);
-    $historyStmt->execute();
-    $historyStmt->close();
-
     // Redirect to dashboard
     header('Location: modules/dashboard.php');
     exit();

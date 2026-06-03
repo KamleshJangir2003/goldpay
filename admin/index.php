@@ -68,18 +68,18 @@ $pageTitle = "Goldpay - Crypto Exchange";
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 100%;
         }
 
         .sidebar-header img {
-            width: 150px;
-            height: 210px;
-            margin-top: -70px;
+            width: 120px;
+            height: auto;
         }
 
         .nav-links {
             display: flex;
             gap: 2rem;
-            margin-top: -65px;
+            align-items: center;
         }
 
         .rupeee img {
@@ -105,7 +105,6 @@ $pageTitle = "Goldpay - Crypto Exchange";
             border: none;
             color: white;
             font-size: 1.5rem;
-            margin-top: -68px;
         }
 
         /* Hero Section */
