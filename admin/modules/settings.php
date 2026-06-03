@@ -1229,7 +1229,10 @@ $activePage = "Settings";
                         <div class="setting-item">
                             <div class="setting-info">
                                 <div class="setting-name">Manual Deposit Approval</div>
-                                <div class="setting-description">Require admin approval for all deposits</div>
+                                <div class="setting-description">
+                                    <strong>ON</strong> = Admin approval required &nbsp;|&nbsp;
+                                    <strong>OFF</strong> = Auto-approve (UTR check karke instantly credit)
+                                </div>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" name="deposit_approval"

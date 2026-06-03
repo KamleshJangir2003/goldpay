@@ -57,6 +57,13 @@ $bankStmt = $pdo->prepare("SELECT * FROM bank_accounts WHERE user_id = ?");
 $bankStmt->execute([$userId]);
 $bankAccounts = $bankStmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Check auto-approve setting
+$autoApprove = false;
+try {
+    $s = $pdo->query("SELECT setting_value FROM settings WHERE setting_group='payment' AND setting_key='deposit_approval' LIMIT 1");
+    $autoApprove = ($s && $s->fetchColumn() == '0'); // 0 = auto approve ON (no manual needed)
+} catch (Exception $e) {}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount = floatval($_POST['amount']);
     $method = htmlspecialchars($_POST['method']);
@@ -70,35 +77,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Please enter UTR / Reference Number.";
         $msgType = "error";
     } else {
-        $insertDeposit = $pdo->prepare("INSERT INTO inr_deposits (user_id, amount, method, utr_number, bank_id, status, created_at) VALUES (?, ?, ?, ?, ?, 'pending', NOW())");
-        $insertDeposit->execute([$userId, $amount, $method, $utr, $bankId ?: null]);
-        $depositId = $pdo->lastInsertId();
+        // UTR duplicate check
+        $utrCheck = $pdo->prepare("SELECT id FROM inr_deposits WHERE utr_number = ? AND status != 'rejected' LIMIT 1");
+        $utrCheck->execute([$utr]);
+        if ($utrCheck->fetch()) {
+            $message = "This UTR number has already been used. Please enter a valid UTR.";
+            $msgType = "error";
+        } else {
+            $newStatus = $autoApprove ? 'approved' : 'pending';
+            $approvedAt = $autoApprove ? date('Y-m-d H:i:s') : null;
 
-        $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, created_at) VALUES (?, 'deposit', ?, 'INR', ?, NOW())")
-            ->execute([$userId, $amount, "INR Deposit via $method — UTR: $utr"]);
+            $insertDeposit = $pdo->prepare("INSERT INTO inr_deposits (user_id, amount, method, utr_number, bank_id, status, approved_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
+            $insertDeposit->execute([$userId, $amount, $method, $utr, $bankId ?: null, $newStatus, $approvedAt]);
+            $depositId = $pdo->lastInsertId();
 
-        // Send email
-        $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
-        $uRow->execute([$userId]);
-        $uData = $uRow->fetch(PDO::FETCH_ASSOC);
-        if ($uData) {
-            sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💰 INR Deposit Request Submitted - Goldpay', [
-                'Transaction Type' => 'INR Deposit',
-                'Amount'           => '₹' . number_format($amount, 2),
-                'Payment Method'   => $method,
-                'UTR / Reference'  => $utr,
-                'Status'           => 'Pending (Admin Approval)',
-                'Date & Time'      => date('d M Y, h:i A'),
-            ]);
+            if ($autoApprove) {
+                // Credit wallet immediately
+                $pdo->prepare("UPDATE wallets SET inr_balance = inr_balance + ? WHERE user_id = ?")->execute([$amount, $userId]);
+                $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, status, created_at) VALUES (?, 'deposit', ?, 'INR', ?, 'completed', NOW())")
+                    ->execute([$userId, $amount, "INR Deposit via $method — UTR: $utr"]);
+            } else {
+                $pdo->prepare("INSERT INTO user_transactions (user_id, type, amount, currency, description, status, created_at) VALUES (?, 'deposit', ?, 'INR', ?, 'pending', NOW())")
+                    ->execute([$userId, $amount, "INR Deposit via $method — UTR: $utr"]);
+            }
+
+            // Send email
+            $uRow = $pdo->prepare("SELECT email, username FROM users WHERE id = ?");
+            $uRow->execute([$userId]);
+            $uData = $uRow->fetch(PDO::FETCH_ASSOC);
+            if ($uData) {
+                $statusLabel = $autoApprove ? 'Auto Approved ✅' : 'Pending (Admin Approval)';
+                sendTransactionEmail($uData['email'], $uData['username'] ?? 'User', '💰 INR Deposit - Goldpay', [
+                    'Transaction Type' => 'INR Deposit',
+                    'Amount'           => '₹' . number_format($amount, 2),
+                    'Payment Method'   => $method,
+                    'UTR / Reference'  => $utr,
+                    'Status'           => $statusLabel,
+                    'Date & Time'      => date('d M Y, h:i A'),
+                ]);
+            }
+
+            if (!$autoApprove) {
+                $uRow2 = $pdo->prepare("SELECT username FROM users WHERE id = ?");
+                $uRow2->execute([$userId]);
+                $uName = ($uRow2->fetch(PDO::FETCH_ASSOC))['username'] ?? 'User';
+                addAdminNotif($pdo, 'INR Deposit Request', "$uName ne Rs." . number_format($amount, 2) . " deposit request submit ki (UTR: $utr)", 'inr_deposit', $depositId);
+            }
+
+            $message = $autoApprove
+                ? "✅ ₹" . number_format($amount, 2) . " deposit successful! Amount credited to your wallet."
+                : "Deposit request of ₹" . number_format($amount, 2) . " submitted! Will be credited after admin approval (within 24 hours).";
+            $msgType = "success";
         }
-
-        $uRow2 = $pdo->prepare("SELECT username FROM users WHERE id = ?");
-        $uRow2->execute([$userId]);
-        $uName = ($uRow2->fetch(PDO::FETCH_ASSOC))['username'] ?? 'User';
-        addAdminNotif($pdo, 'INR Deposit Request', "$uName ne Rs." . number_format($amount, 2) . " deposit request submit ki (UTR: $utr)", 'inr_deposit', $depositId);
-
-        $message = "Deposit request of ₹" . number_format($amount, 2) . " submitted! Will be credited after admin approval (within 24 hours).";
-        $msgType = "success";
     }
 }
 ?>
