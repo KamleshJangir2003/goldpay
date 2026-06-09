@@ -34,66 +34,78 @@ foreach (['TRC20'] as $net) {
     $qrImages[$net] = $r2->fetchColumn() ?: null;
 }
 
-// ── TronGrid Free API Verify (No API Key needed) ──
+// ── cURL helper (replaces file_get_contents — handles non-2xx correctly) ──
+function tronCurl($url) {
+    $headers = ['Accept: application/json', 'User-Agent: Mozilla/5.0'];
+    // Add API key if configured (removes TronGrid rate limits)
+    $apiKey = $_ENV['TRONGRID_API_KEY'] ?? '';
+    if (!empty($apiKey)) {
+        $headers[] = 'TRON-PRO-API-KEY: ' . $apiKey;
+    }
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTPHEADER     => $headers,
+    ]);
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err  = curl_error($ch);
+    curl_close($ch);
+    return ['body' => $body, 'code' => $code, 'err' => $err];
+}
+
+// ── TronGrid Free API Verify (cURL-based) ──
 function verifyTronscanTx($txHash, $expectedToAddr, $expectedAmt) {
     // Step 1: Get transaction info
-    $url = "https://api.trongrid.io/v1/transactions/" . urlencode($txHash) . "?only_confirmed=true";
-    $ctx = stream_context_create(['http' => [
-        'timeout' => 12,
-        'header'  => "User-Agent: Mozilla/5.0\r\nAccept: application/json\r\n"
-    ]]);
-    $resp = @file_get_contents($url, false, $ctx);
-    if (!$resp) return ['ok' => false, 'error' => 'Blockchain API se connect nahi ho saka. Internet check karein ya baad mein try karein.'];
+    $r = tronCurl("https://api.trongrid.io/v1/transactions/" . urlencode($txHash) . "?only_confirmed=true");
+    if ($r['err'] || !$r['body']) {
+        return ['ok' => false, 'error' => 'Blockchain API se connect nahi ho saka. Internet check karein ya baad mein try karein. (cURL: ' . $r['err'] . ')'];
+    }
+    if ($r['code'] === 404) {
+        return ['ok' => false, 'error' => 'Transaction nahi mili. TxHash sahi hai? Ya abhi confirm nahi hua (1-2 min wait karein).'];
+    }
+    if ($r['code'] !== 200) {
+        return ['ok' => false, 'error' => 'Blockchain API error (HTTP ' . $r['code'] . '). Baad mein try karein.'];
+    }
 
-    $d = json_decode($resp, true);
-
-    // Not found or not confirmed
+    $d = json_decode($r['body'], true);
     if (empty($d['data']) || count($d['data']) === 0) {
         return ['ok' => false, 'error' => 'Transaction nahi mili. TxHash sahi hai? Ya abhi confirm nahi hua (1-2 min wait karein).'];
     }
 
     $tx = $d['data'][0];
-
-    // Must be confirmed
     if (!($tx['confirmed'] ?? false)) {
         return ['ok' => false, 'error' => 'Transaction abhi blockchain pe confirm nahi hua. 1-2 minute baad dobara try karein.'];
     }
 
-    // Must be TRC20 transfer (TriggerSmartContract)
     $txType = $tx['raw_data']['contract'][0]['type'] ?? '';
     if ($txType !== 'TriggerSmartContract') {
         return ['ok' => false, 'error' => 'Yeh USDT TRC20 transaction nahi hai.'];
     }
 
-    // Step 2: Get TRC20 transfer detail
-    $url2 = "https://api.trongrid.io/v1/transactions/" . urlencode($txHash) . "/events";
-    $resp2 = @file_get_contents($url2, false, $ctx);
-    if (!$resp2) return ['ok' => false, 'error' => 'Transaction detail fetch nahi ho saki.'];
-
-    $events = json_decode($resp2, true);
-    if (empty($events['data'])) {
-        return ['ok' => false, 'error' => 'Transaction events nahi mile. TRC20 USDT transfer hai?'];
+    // Step 2: Get TRC20 transfer events
+    $r2 = tronCurl("https://api.trongrid.io/v1/transactions/" . urlencode($txHash) . "/events");
+    if ($r2['err'] || $r2['code'] !== 200 || !$r2['body']) {
+        return ['ok' => false, 'error' => 'Transaction detail fetch nahi ho saki (HTTP ' . $r2['code'] . ').'];
     }
 
-    // Find Transfer event — USDT contract on TRON = TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+    $events = json_decode($r2['body'], true);
+    if (empty($events['data'])) {
+        return ['ok' => false, 'error' => 'Transaction events nahi mile. Kya yeh USDT TRC20 transfer hai?'];
+    }
+
     $usdtContract = strtolower('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-    $found = false;
+    $found     = false;
     $actualAmt = 0;
+    $toAddrHex = '';
     foreach ($events['data'] as $event) {
-        $contract = strtolower($event['contract_address'] ?? '');
-        $evName   = $event['event_name'] ?? '';
-        if ($contract === $usdtContract && $evName === 'Transfer') {
-            $toAddr    = $event['result']['to']   ?? '';
-            $rawValue  = $event['result']['value'] ?? 0;
-            $actualAmt = floatval($rawValue) / 1000000; // USDT = 6 decimals
-
-            // Convert hex address to base58 for comparison — TronGrid gives hex
-            // Simple check: last chars match (safe enough)
-            $expectedLower = strtolower(trim($expectedToAddr));
-            $toLower       = strtolower(trim($toAddr));
-
-            // TronGrid returns hex address in events, so also try base58 match
-            // We'll use Tronscan fallback to double-check address
+        if (strtolower($event['contract_address'] ?? '') === $usdtContract && ($event['event_name'] ?? '') === 'Transfer') {
+            $toAddrHex = $event['result']['to']   ?? '';
+            $actualAmt = floatval($event['result']['value'] ?? 0) / 1_000_000;
             $found = true;
             break;
         }
@@ -103,18 +115,16 @@ function verifyTronscanTx($txHash, $expectedToAddr, $expectedAmt) {
         return ['ok' => false, 'error' => 'USDT Transfer event nahi mila. Kya yeh USDT TRC20 transfer hai?'];
     }
 
-    // Step 3: Verify to_address using Tronscan (free, no key)
-    $urlTs = "https://apilist.tronscan.org/api/transaction-info?hash=" . urlencode($txHash);
-    $respTs = @file_get_contents($urlTs, false, $ctx);
-    if ($respTs) {
-        $ts = json_decode($respTs, true);
+    // Step 3: Verify to_address + amount via Tronscan (more reliable base58 address)
+    $rTs = tronCurl("https://apilist.tronscan.org/api/transaction-info?hash=" . urlencode($txHash));
+    if (!$rTs['err'] && $rTs['code'] === 200 && $rTs['body']) {
+        $ts = json_decode($rTs['body'], true);
         $toAddrTs = $ts['contractData']['to_address'] ?? '';
         if (!empty($toAddrTs) && strtolower(trim($toAddrTs)) !== strtolower(trim($expectedToAddr))) {
             return ['ok' => false, 'error' => 'Yeh transaction hamare wallet pe nahi aayi. Sahi wallet address use karein.'];
         }
-        // Use Tronscan amount if available
         if (!empty($ts['contractData']['amount'])) {
-            $actualAmt = floatval($ts['contractData']['amount']) / 1000000;
+            $actualAmt = floatval($ts['contractData']['amount']) / 1_000_000;
         }
     }
 
